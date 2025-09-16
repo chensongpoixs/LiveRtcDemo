@@ -25,7 +25,7 @@ IMPLEMENT_DYNAMIC(DlgRtmpPush, CDialog)
 
 DlgRtmpPush::DlgRtmpPush()
 	: CDialog(DlgRtmpPush::IDD)
-	, m_strUrl(_T(""))
+	, m_strUrl(_T("http://chensong.com:8087"))
 	//, m_pAVRtmpstreamer(NULL)
 	, m_pDlgVideoMain(NULL)
 {
@@ -52,6 +52,7 @@ BEGIN_MESSAGE_MAP(DlgRtmpPush, CDialog)
 	ON_MESSAGE(WM_MY_PUSH_MESSAGE, OnMyMessage)
 //	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BTN_PUSH, &DlgRtmpPush::OnBnClickedBtnPush)
+//	ON_STN_CLICKED(IDC_STATIC_URL, &DlgRtmpPush::OnStnClickedStaticUrl)
 END_MESSAGE_MAP()
 
 
@@ -169,3 +170,6 @@ void DlgRtmpPush::OnBnClickedBtnPush()
 	}
 }
 
+
+
+ 

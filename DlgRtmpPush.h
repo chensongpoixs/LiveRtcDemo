@@ -67,4 +67,6 @@ public:
 protected:
 	DlgVideo		*m_pDlgVideoMain;
 	//RTMPHoster		*m_pAVRtmpstreamer;
+public:
+	//afx_msg void OnStnClickedStaticUrl();
 };

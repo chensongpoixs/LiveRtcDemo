@@ -24,7 +24,7 @@ IMPLEMENT_DYNAMIC(DlgRtmpPull, CDialog)
 
 DlgRtmpPull::DlgRtmpPull()
 	: CDialog(DlgRtmpPull::IDD)
-	, m_strUrl(_T("rtmp://live.hkstv.hk.lxdns.com/live/hks"))
+	, m_strUrl(_T("http://chensong.com:8087"))
 	//, m_pAVRtmplayer(NULL)
 	, m_pDlgVideoMain(NULL)
 {
@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(DlgRtmpPull, CDialog)
 	ON_WM_LBUTTONDBLCLK()
 	ON_MESSAGE(WM_MY_PULL_MESSAGE, OnMyMessage)
 	ON_BN_CLICKED(IDC_BTN_PULL, &DlgRtmpPull::OnBnClickedBtnPull)
+//	ON_STN_CLICKED(IDC_STATIC_URL, &DlgRtmpPull::OnStnClickedStaticUrl)
 END_MESSAGE_MAP()
 
 
@@ -150,3 +151,6 @@ void DlgRtmpPull::OnBnClickedBtnPull()
 		//m_pAVRtmplayer = NULL;
 	}
 }
+
+
+

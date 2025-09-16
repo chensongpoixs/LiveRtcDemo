@@ -68,4 +68,6 @@ private:
 	DlgVideo		*m_pDlgVideoMain;
 	//RTMPGuester		*m_pAVRtmplayer;
 	
+public:
+	//afx_msg void OnStnClickedStaticUrl();
 };
