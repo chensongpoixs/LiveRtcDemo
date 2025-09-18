@@ -28,6 +28,7 @@
 #include "video_render/cvideo_render_factory.h"
 #include "video_render/cvideo_render.h"
 #include "track_capture/ctrack_capture.h"
+#include "media/crtc_media_sink.h"
 
 
 
@@ -71,7 +72,14 @@ public:
 
 	CEdit	m_editUrl;
 	CButton	m_btnRtmp;
+
 	CString m_strUrl;
+
+	CEdit	m_editUserName;
+	CString m_strUserName;
+	
+	CEdit	m_editStreamName;
+	CString m_strStreamName;
 	CStatic m_staticCaptrue;
 	afx_msg void OnBnClickedBtnPush();
 
@@ -89,6 +97,11 @@ private:
 	crtc::cvideo_renderer*         video_renderer_;
 
 	rtc::scoped_refptr<crtc::CapturerTrackSource>       capture_track_source_;
+
+
+	crtc::CRTCMediaSink *                         crtc_media_sink_;
+public:
+	//afx_msg void OnEnChangeStreamName();
 };
 
 #endif // _C_DLG_RTMP_PUSH_H_

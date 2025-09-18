@@ -1,9 +1,10 @@
-﻿cmake_minimum_required(VERSION 2.8)
+﻿
 
 project(crtc_client)
-
-
-
+cmake_minimum_required(VERSION 2.8)
+MESSAGE(STATUS  "####################################")
+MESSAGE(STATUS  "#############${PROJECT_NAME}###############")
+MESSAGE(STATUS  "####################################")
 
 #add_definitions(
 				#	-DWIN32
@@ -22,6 +23,8 @@ include_directories(
 	../libwebrtc
 	../deps/libyuv/include
 	../deps/abseil-cpp/
+	../deps/curl-7.81.0/include
+	../deps/jsoncpp/source/include
 )
 
 link_directories(
@@ -42,28 +45,19 @@ file(GLOB all_src
 	desktop_capture/*.cpp
 	track_capture/*.cpp 
 	track_capture/*.h
+	http/*.h 
+	http/*.cpp 
+	media/*.h
+	media/*.cpp 
+
 
 )
 
 
 
-set(AllFile ${all_src})
-foreach(fileItem ${AllFile})       
-    # Get the directory of the source file
-    get_filename_component(PARENT_DIR "${fileItem}" DIRECTORY)
-	
-    # Remove common directory prefix to make the group
-    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
-    # Make sure we are using windows slashes
-    string(REPLACE "/" "\\" GROUP "${GROUP}")
-	#message(status   "---> fileItem = ${fileItem}     GROUP ---->  ${GROUP}")
-    # Group into "Source Files" and "Header Files"
-    set(GROUP "${GROUP}")
-    source_group("${GROUP}" FILES "${fileItem}")
-endforeach()
+
+
 add_executable(${PROJECT_NAME} ${all_src})
-
-
 #target_link_options(${PROJECT_NAME} PRIVATE
 #		/ENTRY:wWinMainCRTStartup
 #)
@@ -92,7 +86,14 @@ target_link_libraries(${PROJECT_NAME}
 		absl_low_level_hash.lib
 		absl_random_internal_distribution_test_util.lib
 		jpeg-static.lib
+		
 
+		#curl 
+		jsoncpp_static.lib
+		libcurl.lib
+		# curl 
+		Ws2_32.lib
+		Wldap32.lib
 		# api
 		audio_options_api
 		
@@ -186,6 +187,25 @@ target_link_libraries(${PROJECT_NAME}
 			  #  libuv.lib  的依赖库
 			  dbghelp.lib
 			)
+
+
+
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /SAFESEH:NO")
+
+
+set(AllFile ${all_src})
+foreach(fileItem ${AllFile})       
+    # Get the directory of the source file
+    get_filename_component(PARENT_DIR "${fileItem}" DIRECTORY)
+	
+    # Remove common directory prefix to make the group
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
+    # Make sure we are using windows slashes
+    string(REPLACE "/" "\\" GROUP "${GROUP}")
+	#message(status   "---> fileItem = ${fileItem}     GROUP ---->  ${GROUP}")
+    # Group into "Source Files" and "Header Files"
+    set(GROUP "${GROUP}")
+    source_group("${GROUP}" FILES "${fileItem}")
+endforeach()
 
 #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

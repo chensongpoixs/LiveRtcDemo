@@ -22,19 +22,22 @@
 #include  "desktop_capture/desktop_capture_source.h"
 #include "pc/video_track_source.h"
 #include "desktop_capture/desktop_capture.h"
-
+#include "http/crtc_global.h"
 // DlgRtmpPush 对话框
 
 IMPLEMENT_DYNAMIC(DlgRtmpPush, CDialog)
 
 DlgRtmpPush::DlgRtmpPush()
 	: CDialog(DlgRtmpPush::IDD)
-	, m_strUrl(_T("http://chensong.com:8087"))
+	, m_strUrl(("http://chensong.com:8087"))
+	, m_strUserName("1234")
+	, m_strStreamName("crtc")
 	//, m_pAVRtmpstreamer(NULL)
 	, m_pDlgVideoMain(NULL)
 	, video_render_factory_(new crtc::cvideo_render_factory())
 	, video_renderer_(nullptr)
 	, capture_track_source_(nullptr)
+	, crtc_media_sink_ (new crtc::CRTCMediaSink())
 {
 }
 
@@ -71,6 +74,12 @@ void DlgRtmpPush::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_URL, m_editUrl);
 	DDX_Control(pDX, IDC_BTN_PUSH, m_btnRtmp);
 	DDX_Text(pDX, IDC_EDIT_URL, m_strUrl);
+
+	DDX_Control(pDX, IDC_RTC_USER, m_editUserName);
+	DDX_Text(pDX, IDC_RTC_USER, m_strUserName);
+
+	DDX_Control(pDX, IDC_RTC_STREAM_NAME, m_editStreamName);
+	DDX_Text(pDX, IDC_RTC_STREAM_NAME, m_strStreamName);
 	DDX_Control(pDX, IDC_STATIC_CAPTRUE, m_staticCaptrue);
 }
 
@@ -84,6 +93,7 @@ BEGIN_MESSAGE_MAP(DlgRtmpPush, CDialog)
 	ON_BN_CLICKED(IDC_BTN_PUSH, &DlgRtmpPush::OnBnClickedBtnPush)
 //	ON_STN_CLICKED(IDC_STATIC_URL, &DlgRtmpPush::OnStnClickedStaticUrl)
 ON_BN_CLICKED(OPEN_AUDIO_VIDEO, &DlgRtmpPush::OnBnClickedAudioVideo)
+//ON_EN_CHANGE(RTC_STREAM_NAME, &DlgRtmpPush::OnEnChangeStreamName)
 END_MESSAGE_MAP()
 
 
@@ -193,12 +203,42 @@ void DlgRtmpPush::OnBnClickedBtnPush()
 	//}
 	//else 
 	{
+
+		char rtc_url[512] = {0};
+		memset(rtc_url, 0, 512);
+		int fnlen = m_strUrl.GetLength();
+		for (int i = 0; i <= fnlen; i++) {
+			rtc_url[i] = m_strUrl.GetAt(i);
+		}
+
+		char rtc_username[128] = { 0 };
+		memset(rtc_username, 0, 128);
+		 fnlen = m_strUserName.GetLength();
+		for (int i = 0; i <= fnlen; i++) {
+			rtc_username[i] = m_strUserName.GetAt(i);
+		}
+
+		char rtc_streamname[128] = { 0 };
+		memset(rtc_streamname, 0, 128);
+		 fnlen = m_strStreamName.GetLength();
+		for (int i = 0; i <= fnlen; i++) {
+			rtc_streamname[i] = m_strStreamName.GetAt(i);
+		}
+
+		crtc_media_sink_->set_http_param("push", std::string(rtc_url), std::string(rtc_username), std::string(rtc_streamname));
+		crtc_media_sink_->Start();
 		m_btnRtmp.SetWindowText("推流");
 		//m_pAVRtmpstreamer->SetVideoCapturer(NULL);
 		//m_pAVRtmpstreamer->StopRtmpStream();
 	//	RTMPHoster::Destory(m_pAVRtmpstreamer);
 		//m_pAVRtmpstreamer = NULL;
 	}
+
+
+
+
+
+
 }
 
 
@@ -236,3 +276,14 @@ void DlgRtmpPush::OnBnClickedAudioVideo()
 		//m_pDlgVideoMain->ShowWindow(SW_SHOWNORMAL);
 	}
 }
+
+
+//void DlgRtmpPush::OnEnChangeStreamName()
+//{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+//}
