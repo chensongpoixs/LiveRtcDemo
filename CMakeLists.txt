@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.8)
+﻿cmake_minimum_required(VERSION 2.8)
 
 project(crtc_client)
 
@@ -40,6 +40,8 @@ file(GLOB all_src
 	video_render/*.cpp
 	desktop_capture/*.h 
 	desktop_capture/*.cpp
+	track_capture/*.cpp 
+	track_capture/*.h
 
 )
 

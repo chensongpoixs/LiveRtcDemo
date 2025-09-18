@@ -34,23 +34,35 @@ DlgRtmpPush::DlgRtmpPush()
 	, m_pDlgVideoMain(NULL)
 	, video_render_factory_(new crtc::cvideo_render_factory())
 	, video_renderer_(nullptr)
+	, capture_track_source_(nullptr)
 {
 }
 
 DlgRtmpPush::~DlgRtmpPush()
 {
+	if (capture_track_source_)
+	{
+		capture_track_source_->Stop();
+		//capture_track_source_ = nullptr;
+	}
 	
 	if (video_render_factory_)
 	{
+
+		if (video_renderer_)
+		{
+			//delete video_renderer_;
+			//video_renderer_.reset();
+			video_render_factory_->worker_thread()->PostTask(RTC_FROM_HERE, [=] {
+				//video_renderer_.reset();
+				delete video_renderer_;
+			});
+		}
 	
 		delete video_render_factory_;
 		video_render_factory_ = nullptr;
 	}
-	if (video_renderer_)
-	{
-		//delete video_renderer_;
-		video_renderer_.reset();
-	}
+	
 }
 
 void DlgRtmpPush::DoDataExchange(CDataExchange* pDX)
@@ -193,52 +205,6 @@ void DlgRtmpPush::OnBnClickedBtnPush()
 
  
 
-class CapturerTrackSource : public webrtc::VideoTrackSource {
-public:
-	static rtc::scoped_refptr<CapturerTrackSource> Create() {
-		/*const size_t kWidth = 640;
-		const size_t kHeight = 480;
-		const size_t kFps = 30;
-		std::unique_ptr<webrtc::test::VcmCapturer> capturer;
-		std::unique_ptr<webrtc::VideoCaptureModule::DeviceInfo> info(
-			webrtc::VideoCaptureFactory::CreateDeviceInfo());
-		if (!info) {
-		  return nullptr;
-		}
-		int num_devices = info->NumberOfDevices();
-		for (int i = 0; i < num_devices; ++i) {
-		  capturer = absl::WrapUnique(
-			  webrtc::test::VcmCapturer::Create(kWidth, kHeight, kFps, i));
-		  if (capturer) {
-			return new
-				rtc::RefCountedObject<CapturerTrackSource>(std::move(capturer));
-		  }
-		}*/
-		std::unique_ptr<crtc::DesktopCapture> capturer(
-			crtc::DesktopCapture::Create(25, 0));
-		if (capturer) {
-			capturer->StartCapture();
-			return new rtc::RefCountedObject<CapturerTrackSource>(
-				std::move(capturer));
-		}
-		return nullptr;
-	}
-	bool is_screencast() const override { return m_screencast; }
-	absl::optional<bool> needs_denoising() const override { return m_screencast; }
-
-protected:
-	explicit CapturerTrackSource(
-		std::unique_ptr<crtc::DesktopCapture> capturer)
-		: VideoTrackSource(/*remote=*/false), capturer_(std::move(capturer)) {}
-
-private:
-	rtc::VideoSourceInterface<webrtc::VideoFrame>* source() override {
-		return capturer_.get();
-	}
-	// std::unique_ptr<webrtc::test::VcmCapturer> capturer_;
-	std::unique_ptr<crtc::DesktopCapture> capturer_;
-	bool m_screencast = true;
-};
 
 void DlgRtmpPush::OnBnClickedAudioVideo()
 {
@@ -252,18 +218,20 @@ void DlgRtmpPush::OnBnClickedAudioVideo()
 		return;
 	}
 
-	rtc::scoped_refptr<CapturerTrackSource> video_device =
-		CapturerTrackSource::Create();
-	if (video_device ) 
+	capture_track_source_ = crtc::CapturerTrackSource::Create();
+	if (capture_track_source_)
 	{
-		rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(video_render_factory_->create_video_render("desktop", video_device));
-		//rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
-		//	peer_connection_factory_->CreateVideoTrack(kVideoLabel, video_device));
-		//main_wnd_->StartLocalRenderer(video_track_);
+		video_render_factory_->signaling_thread()->PostTask(RTC_FROM_HERE, [=] {
+			// –Ë“™–≈¡Ó
+			rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(video_render_factory_->create_video_render("desktop", capture_track_source_));
+			//rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
+			//	peer_connection_factory_->CreateVideoTrack(kVideoLabel, video_device));
+			//main_wnd_->StartLocalRenderer(video_track_);
 
-		CRect rc;
-		m_staticCaptrue.GetWindowRect(rc);
-		video_renderer_.reset( crtc::cvideo_renderer::Create  (m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), video_track_));
+			CRect rc;
+			m_staticCaptrue.GetWindowRect(rc);
+			video_renderer_ = (crtc::cvideo_renderer::Create(m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), video_track_));
+		});
 	//	m_staticCaptrue.ShowWindow(SW_SHOWNORMAL);
 		//m_pDlgVideoMain->ShowWindow(SW_SHOWNORMAL);
 	}

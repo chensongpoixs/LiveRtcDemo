@@ -35,6 +35,9 @@ namespace crtc
 	cvideo_renderer::~cvideo_renderer()
 	{
 		rendered_track_->RemoveSink(this);
+
+
+		RTC_LOG_F(LS_INFO) << " -->>";
 	}
 	cvideo_renderer::cvideo_renderer(rtc::scoped_refptr<webrtc::VideoTrackInterface> track_to_render)
 		:rendered_track_(track_to_render)  

@@ -27,7 +27,7 @@
 
 #include "video_render/cvideo_render_factory.h"
 #include "video_render/cvideo_render.h"
-
+#include "track_capture/ctrack_capture.h"
 
 
 
@@ -86,7 +86,9 @@ public:
 private:
 
 	crtc::cvideo_render_factory*   video_render_factory_;
-	std::unique_ptr < crtc::cvideo_renderer>         video_renderer_;
+	crtc::cvideo_renderer*         video_renderer_;
+
+	rtc::scoped_refptr<crtc::CapturerTrackSource>       capture_track_source_;
 };
 
 #endif // _C_DLG_RTMP_PUSH_H_

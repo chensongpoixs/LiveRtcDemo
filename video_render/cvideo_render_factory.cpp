@@ -53,10 +53,12 @@ namespace crtc
 
 	cvideo_render_factory::~cvideo_render_factory()
 	{
+		//owned_worker_thread_->Quit();
 		owned_worker_thread_->Stop();
 		owned_signaling_thread_->Stop();
-		owned_worker_thread_.reset();
-		owned_signaling_thread_.reset();
+		//owned_signaling_thread_->Quit();
+		//owned_worker_thread_.reset();
+		//owned_signaling_thread_.reset();
 	}
 
 
