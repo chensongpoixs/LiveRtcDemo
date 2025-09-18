@@ -32,13 +32,11 @@ namespace crtc {
 
 
 
-		rtc::Thread* MaybeStartThread(rtc::Thread* old_thread,
+		std::unique_ptr<rtc::Thread> MaybeStartThread(
 			const std::string& thread_name,
-			bool with_socket_server,
-			std::unique_ptr<rtc::Thread>& thread_holder) {
-			if (old_thread) {
-				return old_thread;
-			}
+			bool with_socket_server) {
+			 
+			std::unique_ptr<rtc::Thread>  thread_holder;
 			if (with_socket_server) {
 				thread_holder = rtc::Thread::CreateWithSocketServer();
 			}
@@ -47,7 +45,7 @@ namespace crtc {
 			}
 			thread_holder->SetName(thread_name, nullptr);
 			thread_holder->Start();
-			return thread_holder.get();
+			return thread_holder;
 		}
 	}
 
@@ -59,9 +57,9 @@ CRTCGlobal* CRTCGlobal::Instance() {
 }
 
 CRTCGlobal::CRTCGlobal() :
-    api_thread_(MaybeStartThread(nullptr, "api_thread", false, api_thread_)),
-    worker_thread_(MaybeStartThread(nullptr, "worker_thread", false, worker_thread_)),
-    network_thread_(MaybeStartThread(nullptr, "network_thread", true, network_thread_))
+    api_thread_(MaybeStartThread(  "api_thread", false)),
+    worker_thread_(MaybeStartThread(  "worker_thread", false)),
+    network_thread_(MaybeStartThread(  "network_thread", true))
   // , video_device_info_(webrtc::VideoCaptureFactory::CreateDeviceInfo())
 {
  /*   api_thread_->SetName("api_thread", nullptr);
@@ -81,7 +79,9 @@ CRTCGlobal::CRTCGlobal() :
 }
 
 CRTCGlobal::~CRTCGlobal() {
-
+	api_thread_->Stop();
+	worker_thread_->Stop();
+	network_thread_->Stop();
 }
 
 } // namespace crtc

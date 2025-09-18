@@ -206,6 +206,9 @@ void DlgRtmpPush::OnBnClickedBtnPush()
 
 		char rtc_url[512] = {0};
 		memset(rtc_url, 0, 512);
+		//GetWindowText()
+		GetDlgItem(IDC_EDIT_URL)->GetWindowText(m_strUrl);
+		//GetWindowText(m_editUrl, (LPSTR)&rtc_url[0], 512);
 		int fnlen = m_strUrl.GetLength();
 		for (int i = 0; i <= fnlen; i++) {
 			rtc_url[i] = m_strUrl.GetAt(i);
@@ -213,6 +216,7 @@ void DlgRtmpPush::OnBnClickedBtnPush()
 
 		char rtc_username[128] = { 0 };
 		memset(rtc_username, 0, 128);
+		GetDlgItem(IDC_RTC_USER)->GetWindowText(m_strUserName);
 		 fnlen = m_strUserName.GetLength();
 		for (int i = 0; i <= fnlen; i++) {
 			rtc_username[i] = m_strUserName.GetAt(i);
@@ -220,6 +224,7 @@ void DlgRtmpPush::OnBnClickedBtnPush()
 
 		char rtc_streamname[128] = { 0 };
 		memset(rtc_streamname, 0, 128);
+		GetDlgItem(IDC_RTC_STREAM_NAME)->GetWindowText(m_strStreamName);
 		 fnlen = m_strStreamName.GetLength();
 		for (int i = 0; i <= fnlen; i++) {
 			rtc_streamname[i] = m_strStreamName.GetAt(i);
