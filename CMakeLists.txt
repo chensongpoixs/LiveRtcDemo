@@ -218,6 +218,107 @@ target_link_libraries(${PROJECT_NAME}
 		net_helpers
 		rtc_event
 		win32 
+
+		# api/ numerics
+		numerics
+		# api/video_codecs 
+		video_codecs_api  				
+		#bitstream_parser_api  			
+		builtin_video_decoder_factory  	
+		builtin_video_encoder_factory  	
+		vp8_temporal_layers_factory  	
+		rtc_software_fallback_wrappers  
+		#api
+		wrapping_async_dns_resolver
+		libjingle_peerconnection_api
+		#async_dns_resolver
+		#packet_socket_factory
+		#scoped_refptr
+
+		#api
+		rtc_error
+		#api /rtc_event_log 
+		rtc_event_log
+		rtc_event_log_factory
+
+		# logging
+
+		#rtc_event_log_api  		   		
+		rtc_event_field  		   		
+		rtc_stream_config  		   		
+		rtc_event_pacing  		   		
+		rtc_event_audio  		   		
+		rtc_event_bwe  		   			
+		rtc_event_frame_events  		
+		rtc_event_generic_packet_events 
+		rtc_event_rtp_rtcp  		   	
+		rtc_event_video      		   	
+		rtc_event_number_encodings  	
+		rtc_event_log_impl_encoder  	
+		#rtc_event_log_impl_output  		
+		fake_rtc_event_log  		   	
+		ice_log  	
+		
+		#rtc_base/experiments 
+		#alr_experiment                             
+		field_trial_parser                         
+		quality_rampup_experiment                  
+		quality_scaler_settings                    
+		bandwidth_quality_scaler_settings          
+		quality_scaling_experiment                 
+		normalize_simulcast_size_experiment        
+		balanced_degradation_settings              
+		cpu_speed_experiment                       
+		encoder_info_settings                      
+		rtt_mult_experiment                        
+		jitter_upper_bound_experiment              
+		rate_control_settings                      
+		keyframe_interval_settings_experiment      
+		stable_target_rate_experiment              
+		min_video_bitrate_experiment 
+		# rtc_base
+
+		#call 
+
+		version                  
+		call_interfaces          
+		#audio_sender_interface   
+		rtp_interfaces           
+		call_rtp_receiver             
+		call_rtp_sender               
+		bitrate_configurator     
+		bitrate_allocator        
+		call                     
+		#receive_stream_interface 
+		video_stream_api         
+		simulated_network        
+		fake_network   
+		
+		#pc 
+		session_description  				
+		simulcast_description  				
+		media_protocol_names  				
+		connection_context  				
+		peer_connection_message_handler  	
+		usage_pattern  						
+		rtp_transceiver  					
+		rtp_transmission_manager  			
+		transceiver_list  					
+		pc_rtp_receiver  						
+		audio_rtp_receiver  				
+		video_rtp_receiver  				
+		video_rtp_track_source  			
+		audio_track  						
+		video_track  						
+		#sdp_state_provider  				
+		jitter_buffer_delay  				
+		remote_audio_source  				
+		pc_rtp_sender  						
+		rtp_parameters_conversion  			
+		dtmf_sender  						
+		media_stream  						
+		video_track_source  				
+		#stats_collector_interface    
 			)
 
 
