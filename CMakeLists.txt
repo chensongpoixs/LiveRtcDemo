@@ -127,6 +127,12 @@ target_link_libraries(${PROJECT_NAME}
 
 		rtc_media_base.lib
 
+		# rtc_base/third_party
+		base64.lib
+		sigslot.lib 
+		# rtc_base/system
+		file_wrapper.lib
+
 
 
 		# api/video
@@ -186,6 +192,32 @@ target_link_libraries(${PROJECT_NAME}
 			  #ucrt.lib
 			  #  libuv.lib  的依赖库
 			  dbghelp.lib
+
+			  # rtc_base/synchronization
+		yield                       
+		mutex               		
+		sequence_checker_internal 	
+		yield_policy
+
+		#rtc_base
+
+		logging
+		ip_address
+		socket_address
+		#rtc_base
+		network_constants
+		async_resolver_interface
+		async_socket            
+		null_socket_server      
+		threading               
+		socket 
+		stringutils
+		timeutils
+		platform_thread
+		platform_thread_types
+		net_helpers
+		rtc_event
+		win32 
 			)
 
 
