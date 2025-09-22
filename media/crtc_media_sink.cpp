@@ -31,21 +31,35 @@
 
 namespace crtc {
 
-CRTCMediaSink::CRTCMediaSink( ) 
+	CRTCMediaSink::CRTCMediaSink()
+		: pc_(nullptr)
 {
    /* MediaFormat video_fmt;
     video_fmt.media_type = MainMediaType::kMainTypeVideo;
     video_fmt.sub_fmt.video_fmt.type = SubMediaType::kSubTypeH264;
     video_in_pin_->set_format(video_fmt);*/
 
-    CRTCGlobal::Instance()->http_manager()->AddObject(this);
 
+    CRTCGlobal::Instance()->http_manager()->AddObject(this);
+	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [this]() {
+		pc_ = new libice::p2p_peer_connection();
+	});
+//	pc_ = new libice::p2p_peer_connection();
    // pc_->SignalConnectionState.connect(this, &CRTCMediaSink::OnConnectionState);
   //  pc_->SignalNetworkInfo.connect(this, &CRTCMediaSink::OnNetworkInfo);
 }
 
 CRTCMediaSink::~CRTCMediaSink() {
     CRTCGlobal::Instance()->http_manager()->RemoveObject(this);
+
+	RTC_LOG_F(LS_WARNING) << "";
+
+
+	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [p = pc_]() {
+		delete p;
+	});
+
+	//delete  pc_;
 }
 
 bool CRTCMediaSink::Start() {
@@ -86,8 +100,22 @@ bool CRTCMediaSink::Start() {
            // if (media_chain_) {
            //     media_chain_->OnChainFailed(this, XRTCError::kPushRequestOfferErr);
            // }
+			RTC_LOG_F(LS_WARNING) << "parse failed !!!  sdp =" << sdp;
             return;
         }
+
+
+		RTC_LOG_F(LS_INFO) << "post --> ";
+		//libice::p2p_peer_connection* p = pc_.get();
+		pc_->GetContext()->signaling_thread()->PostTask(RTC_FROM_HERE, [ =]() {
+			RTC_LOG_F(LS_INFO) << "set remoter sdp ....";
+			pc_->set_remote_sdp(sdp);
+			 libice::RTCOfferAnswerOptions options;
+				options.recv_audio = false;
+			 options.recv_video = false;
+			 std::string answer =  pc_->create_answer(options, user_name_);
+			 SendAnswer(answer);
+		});
 
         //if (pc_->SetRemoteSDP(sdp) != 0) {
         //    return;

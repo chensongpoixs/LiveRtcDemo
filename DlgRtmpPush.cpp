@@ -29,7 +29,7 @@ IMPLEMENT_DYNAMIC(DlgRtmpPush, CDialog)
 
 DlgRtmpPush::DlgRtmpPush()
 	: CDialog(DlgRtmpPush::IDD)
-	, m_strUrl(("http://chensong.com:8087"))
+	, m_strUrl(("http://127.0.0.1:8087"))
 	, m_strUserName("1234")
 	, m_strStreamName("crtc")
 	//, m_pAVRtmpstreamer(NULL)
@@ -65,7 +65,7 @@ DlgRtmpPush::~DlgRtmpPush()
 		delete video_render_factory_;
 		video_render_factory_ = nullptr;
 	}
-	
+	delete crtc_media_sink_;
 }
 
 void DlgRtmpPush::DoDataExchange(CDataExchange* pDX)

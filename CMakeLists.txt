@@ -15,6 +15,9 @@ MESSAGE(STATUS  "####################################")
 				#	-D_AFXDLL
 #)
 
+
+add_definitions(-D_AFXDLL)
+
 include_directories(
 	#${XRTC_DIR}
 	#${XRTC_THIRD_PARTY_DIR}/include
@@ -25,6 +28,7 @@ include_directories(
 	../deps/abseil-cpp/
 	../deps/curl-7.81.0/include
 	../deps/jsoncpp/source/include
+	../libice 
 )
 
 link_directories(
@@ -317,8 +321,55 @@ target_link_libraries(${PROJECT_NAME}
 		rtp_parameters_conversion  			
 		dtmf_sender  						
 		media_stream  						
-		video_track_source  				
-		#stats_collector_interface    
+		video_track_source  	
+			  # rtc_base/third_party
+		base64.lib
+		sigslot.lib 
+		# rtc_base/system
+		file_wrapper.lib
+		# rtc_base/synchronization
+		yield                       
+		mutex               		
+		sequence_checker_internal 	
+		yield_policy
+		#rtc_base/memory 
+		aligned_malloc  
+		fifo_buffer  	
+		#rtc_base
+		callback_list
+		rtc_numerics
+		logging
+		ip_address
+		socket_address
+		 crypt32.lib
+		iphlpapi.lib
+       secur32.lib
+		#rtc_base
+		rtc_base_tests_utils
+		weak_ptr
+		network_constants
+		async_resolver_interface
+		async_socket            
+		null_socket_server      
+		threading               
+		socket 
+		stringutils
+		timeutils
+		platform_thread
+		platform_thread_types
+		net_helpers
+		rtc_event
+		win32 
+		rtc_base
+		#api
+		wrapping_async_dns_resolver
+		#stats_collector_interface  
+		
+
+		ice
+		p2p_peerconnection 
+
+		libmedia
 			)
 
 
