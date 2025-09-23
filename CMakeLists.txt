@@ -23,6 +23,7 @@ include_directories(
 	#${XRTC_THIRD_PARTY_DIR}/include
 	#${XRTC_DIR}/../xrtc-third_party/NIM_Duilib_Framework
 	.
+	../
 	../libwebrtc
 	../deps/libyuv/include
 	../deps/abseil-cpp/
@@ -366,10 +367,10 @@ target_link_libraries(${PROJECT_NAME}
 		#stats_collector_interface  
 		
 
-		ice
-		p2p_peerconnection 
+		libice
+		libp2p_peerconnection 
 
-		libmedia
+		libmedia_transfer_protocol
 			)
 
 

@@ -42,7 +42,7 @@ namespace crtc {
 
     CRTCGlobal::Instance()->http_manager()->AddObject(this);
 	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [this]() {
-		pc_ = new libice::p2p_peer_connection();
+		pc_ = new libp2p_peerconnection::p2p_peer_connection();
 	});
 //	pc_ = new libice::p2p_peer_connection();
    // pc_->SignalConnectionState.connect(this, &CRTCMediaSink::OnConnectionState);
@@ -110,7 +110,7 @@ bool CRTCMediaSink::Start() {
 		pc_->GetContext()->signaling_thread()->PostTask(RTC_FROM_HERE, [ =]() {
 			RTC_LOG_F(LS_INFO) << "set remoter sdp ....";
 			pc_->set_remote_sdp(sdp);
-			 libice::RTCOfferAnswerOptions options;
+			 libp2p_peerconnection::RTCOfferAnswerOptions options;
 				options.recv_audio = false;
 			 options.recv_video = false;
 			 std::string answer =  pc_->create_answer(options, user_name_);

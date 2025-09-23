@@ -24,7 +24,7 @@
 #include <string>
 #include <map>
 #include "rtc_base/third_party/sigslot/sigslot.h"
-#include "p2p_peerconnection/cp2p_peerconnection.h"
+#include "libp2p_peerconnection/cp2p_peerconnection.h"
 namespace crtc {
 
 
@@ -76,7 +76,7 @@ private:
    // std::map<std::string, std::string> request_params_;
    // std::unique_ptr<PeerConnection> pc_;
 
-	  libice::p2p_peer_connection*  pc_;
+	libp2p_peerconnection::p2p_peer_connection*  pc_;
 };
 
 } // namespace crtc
