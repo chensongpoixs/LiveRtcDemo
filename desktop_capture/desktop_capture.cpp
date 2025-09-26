@@ -116,6 +116,7 @@ void DesktopCapture::OnCaptureResult(
   if (!i420_buffer_.get() ||
       i420_buffer_->width() * i420_buffer_->height() < width * height) {
     i420_buffer_ = webrtc::I420Buffer::Create(width, height);
+	libmedia_codec_i420_buffer_ = libmedia_codec::I420Buffer::Create(width, height);
   }
   //i420_buffer_->set_texture();
   libyuv::ConvertToI420(frame->data(), 0, i420_buffer_->MutableDataY(),
@@ -123,8 +124,25 @@ void DesktopCapture::OnCaptureResult(
                         i420_buffer_->StrideU(), i420_buffer_->MutableDataV(),
                         i420_buffer_->StrideV(), 0, 0, width, height, width,
                         height, libyuv::kRotate0, libyuv::FOURCC_ARGB);
+  libyuv::ConvertToI420(frame->data(), 0, libmedia_codec_i420_buffer_->MutableDataY(),
+	  libmedia_codec_i420_buffer_->StrideY(), libmedia_codec_i420_buffer_->MutableDataU(),
+	  libmedia_codec_i420_buffer_->StrideU(), libmedia_codec_i420_buffer_->MutableDataV(),
+	  libmedia_codec_i420_buffer_->StrideV(), 0, 0, width, height, width,
+	  height, libyuv::kRotate0, libyuv::FOURCC_ARGB);
 
-
+  if (x264_encoder_)
+  {
+	  libmedia_codec::VideoFrame captureFrame =
+		  libmedia_codec::VideoFrame::Builder()
+		  .set_video_frame_buffer(libmedia_codec_i420_buffer_)
+		  .set_timestamp_rtp(rtc::TimeMillis())  // set_ntp_time_ms
+		  .set_ntp_time_ms(rtc::TimeMillis())
+		  .set_timestamp_ms(rtc::TimeMillis())
+		  .set_rotation(libmedia_codec::kVideoRotation_0)
+		  .build();
+	  std::shared_ptr< libmedia_codec::VideoFrame>   out = std::make_shared< libmedia_codec::VideoFrame>(captureFrame);
+	  x264_encoder_->OnNewMediaFrame(out);
+  }
   // seting 马流的信息
 
   webrtc::VideoFrame captureFrame =
@@ -135,6 +153,8 @@ void DesktopCapture::OnCaptureResult(
 	  .set_timestamp_ms(rtc::TimeMillis())
 	  .set_rotation(webrtc::kVideoRotation_0)
 	  .build();
+
+
  // captureFrame.set_ntp_time_ms(0);
   DesktopCaptureSource::OnFrame(captureFrame);
   // rtc media info 
@@ -167,6 +187,11 @@ void DesktopCapture::StopCapture() {
   if (capture_thread_ && capture_thread_->joinable()) {
     capture_thread_->join();
   }
+}
+
+void DesktopCapture::set_catprue_callback(libmedia_codec::X264Encoder * x264_encoder)
+{
+	x264_encoder_ = x264_encoder;
 }
 
 }  // namespace webrtc_demo

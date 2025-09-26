@@ -61,4 +61,11 @@ namespace crtc
 			capturer_->StopCapture();
 		}
 	}
+	void CapturerTrackSource::set_catprue_callback(libmedia_codec::X264Encoder * x264_encoder)
+	{
+		if (capturer_)
+		{
+			capturer_->set_catprue_callback(x264_encoder);
+		}
+	}
 }

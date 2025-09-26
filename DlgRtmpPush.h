@@ -29,7 +29,7 @@
 #include "video_render/cvideo_render.h"
 #include "track_capture/ctrack_capture.h"
 #include "media/crtc_media_sink.h"
-
+#include "libmedia_codec/x264_encoder.h"
 
 
 #define WM_MY_PUSH_MESSAGE (WM_USER + 101)
@@ -100,6 +100,8 @@ private:
 
 
 	crtc::CRTCMediaSink *                         crtc_media_sink_;
+
+	 libmedia_codec::X264Encoder *								   x264_encoder_;
 public:
 	//afx_msg void OnEnChangeStreamName();
 };

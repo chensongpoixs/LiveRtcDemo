@@ -25,6 +25,7 @@
 #include "rtc_base/thread.h"
 #include "pc/video_track_source.h"
 #include "desktop_capture/desktop_capture.h"
+#include "libmedia_codec/x264_encoder.h"
 namespace crtc {
 
 	class CapturerTrackSource : public webrtc::VideoTrackSource {
@@ -37,6 +38,8 @@ namespace crtc {
 
 		void  Stop();
 		
+
+		void set_catprue_callback(libmedia_codec::X264Encoder* x264_encoder);
 	protected:
 		explicit CapturerTrackSource(
 			std::unique_ptr<crtc::DesktopCapture> capturer)

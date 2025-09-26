@@ -32,7 +32,7 @@
 namespace crtc {
 
 	CRTCMediaSink::CRTCMediaSink()
-		: pc_(nullptr)
+		: pc_(new libp2p_peerconnection::p2p_peer_connection())
 {
    /* MediaFormat video_fmt;
     video_fmt.media_type = MainMediaType::kMainTypeVideo;
@@ -41,9 +41,9 @@ namespace crtc {
 
 
     CRTCGlobal::Instance()->http_manager()->AddObject(this);
-	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [this]() {
-		pc_ = new libp2p_peerconnection::p2p_peer_connection();
-	});
+	//CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [this]() {
+	//	pc_ = new libp2p_peerconnection::p2p_peer_connection();
+	//});
 //	pc_ = new libice::p2p_peer_connection();
    // pc_->SignalConnectionState.connect(this, &CRTCMediaSink::OnConnectionState);
   //  pc_->SignalNetworkInfo.connect(this, &CRTCMediaSink::OnNetworkInfo);

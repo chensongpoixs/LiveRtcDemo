@@ -27,7 +27,7 @@
 #include "modules/desktop_capture/desktop_frame.h"
 #include "api/video/i420_buffer.h"
 
-
+#include "libmedia_codec/x264_encoder.h"
 #include <thread>
 #include <atomic>
 
@@ -45,7 +45,7 @@ class DesktopCapture : public DesktopCaptureSource,
 
   void StartCapture();
   void StopCapture();
-
+  void set_catprue_callback(libmedia_codec::X264Encoder * x264_encoder);
  private:
   DesktopCapture();
 
@@ -67,6 +67,8 @@ class DesktopCapture : public DesktopCaptureSource,
   std::atomic_bool start_flag_;
 
   rtc::scoped_refptr<webrtc::I420Buffer> i420_buffer_;
+  rtc::scoped_refptr<libmedia_codec::I420Buffer> libmedia_codec_i420_buffer_;
+  libmedia_codec::X264Encoder * x264_encoder_ = nullptr;
 };
 }  // namespace crtc
 

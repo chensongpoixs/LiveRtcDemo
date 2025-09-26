@@ -38,7 +38,13 @@ DlgRtmpPush::DlgRtmpPush()
 	, video_renderer_(nullptr)
 	, capture_track_source_(nullptr)
 	, crtc_media_sink_ (new crtc::CRTCMediaSink())
+	, x264_encoder_(new  libmedia_codec::X264Encoder())
 {
+	x264_encoder_->SetSendFrame(crtc_media_sink_->get_pc_obj());
+
+	rtc::LogMessage::LogToDebug(rtc::LS_VERBOSE);
+
+	x264_encoder_->Start();
 }
 
 DlgRtmpPush::~DlgRtmpPush()
@@ -264,6 +270,7 @@ void DlgRtmpPush::OnBnClickedAudioVideo()
 	}
 
 	capture_track_source_ = crtc::CapturerTrackSource::Create();
+	capture_track_source_->set_catprue_callback(x264_encoder_);
 	if (capture_track_source_)
 	{
 		video_render_factory_->signaling_thread()->PostTask(RTC_FROM_HERE, [=] {

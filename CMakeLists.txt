@@ -7,12 +7,19 @@ MESSAGE(STATUS  "#############${PROJECT_NAME}###############")
 MESSAGE(STATUS  "####################################")
 
 #add_definitions(
-				#	-DWIN32
-				#	-D_DEBUG
-				##	-D_WINDOWS
-				#	-D_UNICODE
-				#	-DUNICODE
-				#	-D_AFXDLL
+#-DHAVE_STRING_H
+#-D__ICL
+#-DWIN32
+#-DHIGH_BIT_DEPTH=0
+#-DBIT_DEPTH=8
+#-D_WIN32_WINNT=0x0600
+#-D_DEBUG
+#				#	-DWIN32
+#				#	-D_DEBUG
+#				##	-D_WINDOWS
+#				#	-D_UNICODE
+#				#	-DUNICODE
+#				#	-D_AFXDLL
 #)
 
 
@@ -371,6 +378,14 @@ target_link_libraries(${PROJECT_NAME}
 		libp2p_peerconnection 
 
 		libmedia_transfer_protocol
+		libsrtp2
+		libmedia_codec
+		#libx264.lib
+		x264.lib
+		#libx264.lib
+		#libx264d.lib
+	#libx264.dll.lib
+	#libx264.lib
 			)
 
 
