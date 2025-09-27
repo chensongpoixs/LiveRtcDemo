@@ -16,8 +16,8 @@
 
 
 ******************************************************************************/
-#ifndef _C_DLG_RTMP_PUSH_H_
-#define _C_DLG_RTMP_PUSH_H_
+#ifndef _C_DLG_LIVE_PUSH_H_
+#define _C_DLG_LIVE_PUSH_H_
 
 
 #include "Resource.h"
@@ -36,13 +36,13 @@
 
 // DlgVideo 对话框
 class CLiveWin32Dlg;
-class DlgRtmpPush : public CDialog//, public RTMPHosterEvent
+class DlgLivePush : public CDialog//, public RTMPHosterEvent
 {
-	DECLARE_DYNAMIC(DlgRtmpPush)
+	DECLARE_DYNAMIC(DlgLivePush)
 
 public:
-	DlgRtmpPush();   // 标准构造函数
-	virtual ~DlgRtmpPush();
+	DlgLivePush();   // 标准构造函数
+	virtual ~DlgLivePush();
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_PUSH };
@@ -80,6 +80,12 @@ public:
 	
 	CEdit	m_editStreamName;
 	CString m_strStreamName;
+	CComboBox  m_comboxType;
+	CString m_strLiveType;
+
+
+	CComboBox  m_comboxcaptureType;
+	CString m_strCaptureType;
 	CStatic m_staticCaptrue;
 	afx_msg void OnBnClickedBtnPush();
 
@@ -104,6 +110,8 @@ private:
 	 libmedia_codec::X264Encoder *								   x264_encoder_;
 public:
 	//afx_msg void OnEnChangeStreamName();
+//	afx_msg void OnCbnSelchangeCombo1();
+	//afx_msg void OnCbnSelchangeCombo2();
 };
 
-#endif // _C_DLG_RTMP_PUSH_H_
+#endif // _C_DLG_LIVE_PUSH_H_

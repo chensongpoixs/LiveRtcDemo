@@ -16,7 +16,8 @@
 
 
 ******************************************************************************/
-#pragma once
+#ifndef _C_LIVE_WIN32_DLG_H_
+#define _C_LIVE_WIN32_DLG_H_
 #include "Resource.h"
 
 // CLiveWin32Dlg ¶Ô»°¿ò
@@ -51,3 +52,6 @@ public:
 	afx_msg void OnBnClickedBtnPull();
 	afx_msg void OnBnClickedBtnRtcp();
 };
+
+
+#endif // _C_LIVE_WIN32_DLG_H_

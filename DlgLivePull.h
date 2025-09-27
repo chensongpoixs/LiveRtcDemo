@@ -16,7 +16,9 @@
 
 
 ******************************************************************************/
-#pragma once
+#ifndef _C_DLG_LIVE_PULL_H_
+#define _C_DLG_LIVE_PULL_H_
+
 #include "Resource.h"
 //#include "RtmpGuester.h"
 #include "DlgVideo.h"
@@ -24,13 +26,13 @@
 
 // DlgVideo 对话框
 class CLiveWin32Dlg;
-class DlgRtmpPull : public CDialog //, public RTMPGuesterEvent
+class DlgLivePull : public CDialog //, public RTMPGuesterEvent
 {
-	DECLARE_DYNAMIC(DlgRtmpPull)
+	DECLARE_DYNAMIC(DlgLivePull)
 
 public:
-	DlgRtmpPull();   // 标准构造函数
-	virtual ~DlgRtmpPull();
+	DlgLivePull();   // 标准构造函数
+	virtual ~DlgLivePull();
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_PULL };
@@ -58,7 +60,7 @@ public:
 	afx_msg LRESULT OnMyMessage(WPARAM wParam, LPARAM lParam);
 
 	CEdit	m_editUrl;
-	CButton m_btnRtmp;
+	CButton m_btnLive;
 	CString m_strUrl;
 	CStatic m_staticCaptrue;
 
@@ -71,3 +73,6 @@ private:
 public:
 	//afx_msg void OnStnClickedStaticUrl();
 };
+
+
+#endif // _C_DLG_LIVE_PULL_H_

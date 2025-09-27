@@ -17,7 +17,7 @@
 
 ******************************************************************************/
 #include "stdafx.h"
-#include "DlgRtmpPush.h"
+#include "DlgLivePush.h"
 
 #include  "desktop_capture/desktop_capture_source.h"
 #include "pc/video_track_source.h"
@@ -25,13 +25,15 @@
 #include "http/crtc_global.h"
 // DlgRtmpPush 对话框
 
-IMPLEMENT_DYNAMIC(DlgRtmpPush, CDialog)
+IMPLEMENT_DYNAMIC(DlgLivePush, CDialog)
 
-DlgRtmpPush::DlgRtmpPush()
-	: CDialog(DlgRtmpPush::IDD)
+DlgLivePush::DlgLivePush()
+	: CDialog(DlgLivePush::IDD)
 	, m_strUrl(("http://127.0.0.1:8087"))
 	, m_strUserName("1234")
 	, m_strStreamName("crtc")
+	, m_strLiveType("RTC")
+	, m_strCaptureType("桌面")
 	//, m_pAVRtmpstreamer(NULL)
 	, m_pDlgVideoMain(NULL)
 	, video_render_factory_(new crtc::cvideo_render_factory())
@@ -47,7 +49,7 @@ DlgRtmpPush::DlgRtmpPush()
 	x264_encoder_->Start();
 }
 
-DlgRtmpPush::~DlgRtmpPush()
+DlgLivePush::~DlgLivePush()
 {
 	if (capture_track_source_)
 	{
@@ -78,7 +80,7 @@ DlgRtmpPush::~DlgRtmpPush()
 	delete crtc_media_sink_;
 }
 
-void DlgRtmpPush::DoDataExchange(CDataExchange* pDX)
+void DlgLivePush::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT_URL, m_editUrl);
@@ -91,39 +93,80 @@ void DlgRtmpPush::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RTC_STREAM_NAME, m_editStreamName);
 	DDX_Text(pDX, IDC_RTC_STREAM_NAME, m_strStreamName);
 	DDX_Control(pDX, IDC_STATIC_CAPTRUE, m_staticCaptrue);
+
+	CComboBox* pComboBox = (CComboBox*)GetDlgItem(IDC_COMBO1);
+	CComboBox* pComboBox2 = (CComboBox*)GetDlgItem(IDC_COMBO2);
+	//向列表中添加几个项
+	int nIndex = 0;
+	//pComboBox->AddString(_T("RTC"));
+	//pComboBox->AddString(_T("RTMP"));
+	//pComboBox->AddString(_T("RTSP"));
+	 
+	nIndex = pComboBox->InsertString(0, _T("RTC"));
+ 
+	nIndex = pComboBox->InsertString(1, _T("RTMP"));
+ 
+	nIndex = pComboBox->InsertString(  2, _T("RTSP"));
+ 
+	nIndex = pComboBox2->InsertString(0, _T("桌面"));
+
+	nIndex = pComboBox2->InsertString(1, _T("摄像头"));
+
+	//nIndex = pComboBox->InsertString(2, _T("RTSP"));
+	// 假设您想删除索引为 0 的项（即第一个项）
+//	pComboBox->DeleteString(0);
+
+	// 删除项后，后续项的索引将改变。例如，如果您删除原来索引为 1 的项，需要删除现在索引为0的项。
+//	pComboBox->DeleteString(0);
+
+//	pComboBox->AddString(_T("选项 1"));
+	//pComboBox->AddString(_T("选项 2"));
+	//pComboBox->AddString(_T("选项 3"));
+
+	//ResetContent用于清空组合框中的所有项
+	//pComboBox->ResetContent();
+	 
+	// IDC_COMBO1
+	DDX_Control(pDX, IDC_COMBO1, m_comboxType);
+	DDX_Text(pDX, IDC_COMBO1, m_strLiveType);
+	DDX_Control(pDX, IDC_COMBO2, m_comboxcaptureType);
+	DDX_Text(pDX, IDC_COMBO2, m_strCaptureType);
+	
 }
 
 
-BEGIN_MESSAGE_MAP(DlgRtmpPush, CDialog)
+BEGIN_MESSAGE_MAP(DlgLivePush, CDialog)
 	ON_WM_CLOSE()
 	ON_WM_ERASEBKGND()
 	ON_WM_LBUTTONDBLCLK()
 	ON_MESSAGE(WM_MY_PUSH_MESSAGE, OnMyMessage)
 //	ON_WM_TIMER()
-	ON_BN_CLICKED(IDC_BTN_PUSH, &DlgRtmpPush::OnBnClickedBtnPush)
-//	ON_STN_CLICKED(IDC_STATIC_URL, &DlgRtmpPush::OnStnClickedStaticUrl)
-ON_BN_CLICKED(OPEN_AUDIO_VIDEO, &DlgRtmpPush::OnBnClickedAudioVideo)
-//ON_EN_CHANGE(RTC_STREAM_NAME, &DlgRtmpPush::OnEnChangeStreamName)
+	ON_BN_CLICKED(IDC_BTN_PUSH, &DlgLivePush::OnBnClickedBtnPush)
+//	ON_STN_CLICKED(IDC_STATIC_URL, &DlgLivePush::OnStnClickedStaticUrl)
+ON_BN_CLICKED(OPEN_AUDIO_VIDEO, &DlgLivePush::OnBnClickedAudioVideo)
+//ON_EN_CHANGE(RTC_STREAM_NAME, &DlgLivePush::OnEnChangeStreamName)
+//ON_CBN_SELCHANGE(IDC_COMBO1, &DlgLivePush::OnCbnSelchangeCombo1)
+//ON_CBN_SELCHANGE(IDC_COMBO2, &DlgLivePush::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
 // DlgRtmpPush 消息处理程序
 
-void DlgRtmpPush::OnOK()
+void DlgLivePush::OnOK()
 {
 }
 
-void DlgRtmpPush::OnCancel()
-{
-	CDialog::EndDialog(0);
-}
-
-void DlgRtmpPush::OnClose()
+void DlgLivePush::OnCancel()
 {
 	CDialog::EndDialog(0);
 }
 
-BOOL DlgRtmpPush::OnInitDialog()
+void DlgLivePush::OnClose()
+{
+	CDialog::EndDialog(0);
+}
+
+BOOL DlgLivePush::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -143,7 +186,7 @@ BOOL DlgRtmpPush::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-BOOL DlgRtmpPush::DestroyWindow()
+BOOL DlgLivePush::DestroyWindow()
 {
 	KillTimer(1);
 	//if (m_pAVRtmpstreamer) {
@@ -162,22 +205,22 @@ BOOL DlgRtmpPush::DestroyWindow()
 	return CDialog::DestroyWindow();
 }
 
-BOOL DlgRtmpPush::OnEraseBkgnd(CDC* pDC)
+BOOL DlgLivePush::OnEraseBkgnd(CDC* pDC)
 {
 	return FALSE;
 }
 
-void DlgRtmpPush::OnLButtonDblClk(UINT nFlags, CPoint point)
+void DlgLivePush::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	CDialog::OnLButtonDblClk(nFlags, point);
 }
 
-void DlgRtmpPush::OnTimer(UINT nIDEvent)
+void DlgLivePush::OnTimer(UINT nIDEvent)
 {
 	CDialog::OnTimer(nIDEvent);
 }
 
-LRESULT DlgRtmpPush::OnMyMessage(WPARAM wParam, LPARAM lParam)
+LRESULT DlgLivePush::OnMyMessage(WPARAM wParam, LPARAM lParam)
 {
 	CString *pstrGet = (CString *)lParam;
 	char ss[128];
@@ -193,7 +236,7 @@ LRESULT DlgRtmpPush::OnMyMessage(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void DlgRtmpPush::OnBnClickedBtnPush()
+void DlgLivePush::OnBnClickedBtnPush()
 {
 	// TODO:  在此添加控件通知处理程序代码
 	//if (m_pAVRtmpstreamer == NULL) {
@@ -261,7 +304,7 @@ void DlgRtmpPush::OnBnClickedBtnPush()
  
 
 
-void DlgRtmpPush::OnBnClickedAudioVideo()
+void DlgLivePush::OnBnClickedAudioVideo()
 {
 	// TODO: Add your control notification handler code here
 	if (!video_render_factory_)
@@ -302,4 +345,16 @@ void DlgRtmpPush::OnBnClickedAudioVideo()
 	// with the ENM_CHANGE flag ORed into the mask.
 
 	// TODO:  Add your control notification handler code here
+//}
+
+
+//void DlgLivePush::OnCbnSelchangeCombo1()
+//{
+//	// TODO: Add your control notification handler code here
+//}
+
+
+//void DlgLivePush::OnCbnSelchangeCombo2()
+//{
+//	// TODO: Add your control notification handler code here
 //}

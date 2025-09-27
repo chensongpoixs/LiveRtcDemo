@@ -21,8 +21,8 @@
 #include "LiveWin32.h"
 #include "LiveWin32Dlg.h"
 #include "afxdialogex.h"
-#include "DlgRtmpPush.h"
-#include "DlgRtmpPull.h"
+#include "DlgLivePush.h"
+#include "DlgLivePull.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -199,7 +199,7 @@ HCURSOR CLiveWin32Dlg::OnQueryDragIcon()
 void CLiveWin32Dlg::OnBnClickedBtnPush()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	DlgRtmpPush dlg;
+	DlgLivePush dlg;
 	dlg.DoModal();
 }
 
@@ -207,7 +207,7 @@ void CLiveWin32Dlg::OnBnClickedBtnPush()
 void CLiveWin32Dlg::OnBnClickedBtnPull()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	DlgRtmpPull dlg;
+	DlgLivePull dlg;
 	dlg.DoModal();
 }
 

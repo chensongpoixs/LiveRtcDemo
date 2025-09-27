@@ -16,7 +16,8 @@
 
 
 ******************************************************************************/
-#pragma once
+#ifndef _C_DLG_VIDEO_H_
+#define _C_DLG_VIDEO_H_
 #include "Resource.h"
 #include <string>
 
@@ -47,3 +48,5 @@ public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 
 };
+
+#endif // _C_DLG_VIDEO_H_

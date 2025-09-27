@@ -16,8 +16,8 @@
 
 
  ******************************************************************************/
-
-#pragma once
+#ifndef _C_LIVE_WIN32_H_
+#define _C_LIVE_WIN32_H_
 
 #ifndef __AFXWIN_H__
 	#error "在包含此文件之前包含“stdafx.h”以生成 PCH 文件"
@@ -45,3 +45,5 @@ public:
 };
 
 extern CLiveWin32App theApp;
+
+#endif // _C_LIVE_WIN32_H_
