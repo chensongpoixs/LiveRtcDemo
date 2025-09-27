@@ -55,7 +55,7 @@ CRTCMediaSink::~CRTCMediaSink() {
 	RTC_LOG_F(LS_WARNING) << "";
 
 
-	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [p = pc_]() {
+	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [p = std::move(pc_)]() {
 		delete p;
 	});
 

@@ -54,6 +54,10 @@ DlgRtmpPush::~DlgRtmpPush()
 		capture_track_source_->Stop();
 		//capture_track_source_ = nullptr;
 	}
+	x264_encoder_->SetSendFrame(nullptr);
+	x264_encoder_->Stop();
+	delete x264_encoder_;
+	x264_encoder_ = nullptr;
 	
 	if (video_render_factory_)
 	{
