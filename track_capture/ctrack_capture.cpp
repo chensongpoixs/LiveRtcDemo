@@ -45,7 +45,7 @@ namespace crtc
 		  }
 		}*/
 		std::unique_ptr<crtc::DesktopCapture> capturer(
-			crtc::DesktopCapture::Create(25, 0));
+			crtc::DesktopCapture::Create(90, 0));
 		if (capturer) {
 			capturer->StartCapture();
 			return new rtc::RefCountedObject<CapturerTrackSource>(

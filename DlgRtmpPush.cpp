@@ -42,7 +42,7 @@ DlgRtmpPush::DlgRtmpPush()
 {
 	x264_encoder_->SetSendFrame(crtc_media_sink_->get_pc_obj());
 
-	rtc::LogMessage::LogToDebug(rtc::LS_VERBOSE);
+//	rtc::LogMessage::LogToDebug(rtc::LS_VERBOSE);
 
 	x264_encoder_->Start();
 }

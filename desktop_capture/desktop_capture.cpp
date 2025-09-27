@@ -124,11 +124,12 @@ void DesktopCapture::OnCaptureResult(
                         i420_buffer_->StrideU(), i420_buffer_->MutableDataV(),
                         i420_buffer_->StrideV(), 0, 0, width, height, width,
                         height, libyuv::kRotate0, libyuv::FOURCC_ARGB);
-  libyuv::ConvertToI420(frame->data(), 0, libmedia_codec_i420_buffer_->MutableDataY(),
+#if 1
+    libyuv::ConvertToI420(frame->data(), 0, libmedia_codec_i420_buffer_->MutableDataY(),
 	  libmedia_codec_i420_buffer_->StrideY(), libmedia_codec_i420_buffer_->MutableDataU(),
 	  libmedia_codec_i420_buffer_->StrideU(), libmedia_codec_i420_buffer_->MutableDataV(),
 	  libmedia_codec_i420_buffer_->StrideV(), 0, 0, width, height, width,
-	  height, libyuv::kRotate0, libyuv::FOURCC_ARGB);
+	  height, libyuv::kRotate0, libyuv::FOURCC_ARGB); 
 
   if (x264_encoder_)
   {
@@ -143,6 +144,7 @@ void DesktopCapture::OnCaptureResult(
 	  std::shared_ptr< libmedia_codec::VideoFrame>   out = std::make_shared< libmedia_codec::VideoFrame>(captureFrame);
 	  x264_encoder_->OnNewMediaFrame(out);
   }
+#endif // 
   // seting 马流的信息
 
   webrtc::VideoFrame captureFrame =
@@ -176,7 +178,7 @@ void DesktopCapture::StartCapture() {
 
     while (start_flag_) {
       dc_->CaptureFrame();
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000 / fps_));
+     // std::this_thread::sleep_for(std::chrono::milliseconds(1000 / fps_));
     }
   }));
 }

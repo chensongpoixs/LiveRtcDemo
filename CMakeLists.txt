@@ -70,9 +70,7 @@ file(GLOB all_src
 
 
 add_executable(${PROJECT_NAME} ${all_src})
-#target_link_options(${PROJECT_NAME} PRIVATE
-#		/ENTRY:wWinMainCRTStartup
-#)
+
 target_link_libraries(${PROJECT_NAME} 
 
 
@@ -369,6 +367,7 @@ target_link_libraries(${PROJECT_NAME}
 		rtc_event
 		win32 
 		rtc_base
+		rate_limiter
 		#api
 		wrapping_async_dns_resolver
 		#stats_collector_interface  
@@ -382,6 +381,8 @@ target_link_libraries(${PROJECT_NAME}
 		libmedia_codec
 		#libx264.lib
 		x264.lib
+
+		
 		#libx264.lib
 		#libx264d.lib
 	#libx264.dll.lib
@@ -389,9 +390,13 @@ target_link_libraries(${PROJECT_NAME}
 			)
 
 
-
+			#RTC_LOG_F(LS_INFO) << rtcp_block.ToString();
+			#Windows (/SUBSYSTEM:WINDOWS)
+			# Console (/SUBSYSTEM:CONSOLE)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /SAFESEH:NO")
-
+#target_link_options(${PROJECT_NAME} PRIVATE
+#		/ENTRY:wWinMainCRTStartup
+#)
 
 set(AllFile ${all_src})
 foreach(fileItem ${AllFile})       
