@@ -59,7 +59,7 @@ BOOL CLiveWin32App::InitInstance()
 	//InitCommonControlsEx();
 	FILE *stream;
 	AllocConsole();
-	SetConsoleTitle(_T("CRTC debug console"));
+	SetConsoleTitle(_T("Live debug console"));
 	freopen_s(&stream, "CONOUT$", "w", stdout);
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);

@@ -1,6 +1,6 @@
 ﻿
 
-project(crtc_client)
+project(live_demo)
 cmake_minimum_required(VERSION 2.8)
 MESSAGE(STATUS  "####################################")
 MESSAGE(STATUS  "#############${PROJECT_NAME}###############")
@@ -129,8 +129,8 @@ target_link_libraries(${PROJECT_NAME}
 		checks.lib
 		rtc_base.lib
 		common_audio.lib
-		task_queue.lib
-		default_task_queue_factory.lib
+		task_queue
+		default_task_queue_factory
 		rtc_base_win.lib
 		rtc_base_win_wgc.lib
 		rtc_base_approved.lib
@@ -142,9 +142,9 @@ target_link_libraries(${PROJECT_NAME}
 		sigslot.lib 
 		# rtc_base/system
 		file_wrapper.lib
+		default_task_queue_factory
 
-
-
+		rtc_task_queue_win
 		# api/video
 
 		video_rtp_headers 						
@@ -228,7 +228,7 @@ target_link_libraries(${PROJECT_NAME}
 		net_helpers
 		rtc_event
 		win32 
-
+		rtc_task_queue
 		# api/ numerics
 		numerics
 		# api/video_codecs 
