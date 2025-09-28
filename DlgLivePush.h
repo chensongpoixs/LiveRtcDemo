@@ -25,9 +25,9 @@
 #include "DlgVideo.h"
 
 
-#include "video_render/cvideo_render_factory.h"
-#include "video_render/cvideo_render.h"
-#include "track_capture/ctrack_capture.h"
+#include "libcross_platform_collection_render/video_render/cvideo_render_factory.h"
+#include "libcross_platform_collection_render/video_render/cvideo_render.h"
+#include "libcross_platform_collection_render/track_capture/ctrack_capture.h"
 #include "media/crtc_media_sink.h"
 #include "libmedia_codec/x264_encoder.h"
 
@@ -99,10 +99,10 @@ public:
 
 private:
 
-	crtc::cvideo_render_factory*   video_render_factory_;
-	crtc::cvideo_renderer*         video_renderer_;
+	libcross_platform_collection_render::cvideo_render_factory*   video_render_factory_;
+	libcross_platform_collection_render::cvideo_renderer*         video_renderer_;
 
-	rtc::scoped_refptr<crtc::CapturerTrackSource>       capture_track_source_;
+	rtc::scoped_refptr<libcross_platform_collection_render::CapturerTrackSource>       capture_track_source_;
 
 
 	crtc::CRTCMediaSink *                         crtc_media_sink_;
@@ -112,6 +112,7 @@ public:
 	//afx_msg void OnEnChangeStreamName();
 //	afx_msg void OnCbnSelchangeCombo1();
 	//afx_msg void OnCbnSelchangeCombo2();
+	afx_msg void OnCbnSelchangeCombo2();
 };
 
 #endif // _C_DLG_LIVE_PUSH_H_

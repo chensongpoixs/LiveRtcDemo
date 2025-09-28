@@ -51,16 +51,18 @@ file(GLOB all_src
 	*.h
 	*.cpp 
 	LiveWin32.rc
-	video_render/*.h
-	video_render/*.cpp
-	desktop_capture/*.h 
-	desktop_capture/*.cpp
-	track_capture/*.cpp 
-	track_capture/*.h
+	#video_render/*.h
+	#video_render/*.cpp
+	#desktop_capture/*.h 
+	#desktop_capture/*.cpp
+	#track_capture/*.cpp 
+	#track_capture/*.h
 	http/*.h 
 	http/*.cpp 
 	media/*.h
 	media/*.cpp 
+	#vcm_capture/*.h 
+	#vcm_capture/*.cpp 
 
 
 )
@@ -75,8 +77,13 @@ target_link_libraries(${PROJECT_NAME}
 
 
 
-
-
+libcross_platform_collection_render
+		video_capture_module
+		video_capture_internal_impl
+		ole32.lib
+        oleaut32.lib
+        strmiids.lib
+        user32.lib
 		libwebrtc.lib
 		abseil_dll.lib
 		absl_cordz_functions.lib

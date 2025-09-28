@@ -19,11 +19,14 @@
 #include "stdafx.h"
 #include "DlgLivePush.h"
 
-#include  "desktop_capture/desktop_capture_source.h"
+#include  "libcross_platform_collection_render/desktop_capture/desktop_capture_source.h"
 #include "pc/video_track_source.h"
-#include "desktop_capture/desktop_capture.h"
+#include "libcross_platform_collection_render/desktop_capture/desktop_capture.h"
 #include "http/crtc_global.h"
+
 // DlgRtmpPush 对话框
+
+static const char * capture_type = "摄像头";
 
 IMPLEMENT_DYNAMIC(DlgLivePush, CDialog)
 
@@ -33,10 +36,10 @@ DlgLivePush::DlgLivePush()
 	, m_strUserName("1234")
 	, m_strStreamName("crtc")
 	, m_strLiveType("RTC")
-	, m_strCaptureType("桌面")
+	, m_strCaptureType(capture_type)
 	//, m_pAVRtmpstreamer(NULL)
 	, m_pDlgVideoMain(NULL)
-	, video_render_factory_(new crtc::cvideo_render_factory())
+	, video_render_factory_(new libcross_platform_collection_render::cvideo_render_factory())
 	, video_renderer_(nullptr)
 	, capture_track_source_(nullptr)
 	, crtc_media_sink_ (new crtc::CRTCMediaSink())
@@ -147,6 +150,7 @@ ON_BN_CLICKED(OPEN_AUDIO_VIDEO, &DlgLivePush::OnBnClickedAudioVideo)
 //ON_EN_CHANGE(RTC_STREAM_NAME, &DlgLivePush::OnEnChangeStreamName)
 //ON_CBN_SELCHANGE(IDC_COMBO1, &DlgLivePush::OnCbnSelchangeCombo1)
 //ON_CBN_SELCHANGE(IDC_COMBO2, &DlgLivePush::OnCbnSelchangeCombo2)
+ON_CBN_SELCHANGE(IDC_COMBO2, &DlgLivePush::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
@@ -315,21 +319,31 @@ void DlgLivePush::OnBnClickedAudioVideo()
 	{
 		return;
 	}
-
-	capture_track_source_ = crtc::CapturerTrackSource::Create();
-	capture_track_source_->set_catprue_callback(x264_encoder_);
-	if (capture_track_source_)
+	char curcapture_type[128] = { 0 };
+	memset(curcapture_type, 0, 128);
+	GetDlgItem(IDC_COMBO2)->GetWindowText(m_strCaptureType);
+	int fnlen = m_strCaptureType.GetLength();
+	for (int i = 0; i <= fnlen; i++) {
+		curcapture_type[i] = m_strCaptureType.GetAt(i);
+	}
+	
+	//if (capture_track_source_)
 	{
-		video_render_factory_->signaling_thread()->PostTask(RTC_FROM_HERE, [=] {
+
+		video_render_factory_->signaling_thread()->PostTask(RTC_FROM_HERE, [this, curcapture_type] {
+			CRect rc;
+			m_staticCaptrue.GetWindowRect(rc);
+			capture_track_source_ = libcross_platform_collection_render::CapturerTrackSource::Create(std::string(curcapture_type) == std::string(capture_type));
+			capture_track_source_->set_catprue_callback(x264_encoder_, video_render_factory_->signaling_thread());
+
 			// 需要信令
 			rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(video_render_factory_->create_video_render("desktop", capture_track_source_));
 			//rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
 			//	peer_connection_factory_->CreateVideoTrack(kVideoLabel, video_device));
 			//main_wnd_->StartLocalRenderer(video_track_);
 
-			CRect rc;
-			m_staticCaptrue.GetWindowRect(rc);
-			video_renderer_ = (crtc::cvideo_renderer::Create(m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), video_track_));
+			video_renderer_ = (libcross_platform_collection_render::cvideo_renderer::Create(m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), video_track_));
+			capture_track_source_->StartCapture();
 		});
 	//	m_staticCaptrue.ShowWindow(SW_SHOWNORMAL);
 		//m_pDlgVideoMain->ShowWindow(SW_SHOWNORMAL);
@@ -358,3 +372,9 @@ void DlgLivePush::OnBnClickedAudioVideo()
 //{
 //	// TODO: Add your control notification handler code here
 //}
+
+
+void DlgLivePush::OnCbnSelchangeCombo2()
+{
+	// TODO: Add your control notification handler code here
+}
