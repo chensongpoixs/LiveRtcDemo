@@ -55,6 +55,12 @@ public:
 
 
 	void set_http_param(const std::string & action, std::string & url, const std::string & user_name, const std::string & stream_name);
+
+
+public:
+	void OnTragetTransferRate(libp2p_peerconnection::p2p_peer_connection *, const libice::TargetTransferRate& target);
+	sigslot::signal2<crtc::CRTCMediaSink*, const libice::TargetTransferRate&> SignalTargetTransferRate;
+
 private:
    /* void OnNetworkInfo(PeerConnection*, int64_t rtt_ms,
         int32_t packets_lost, uint8_t fraction_lost,

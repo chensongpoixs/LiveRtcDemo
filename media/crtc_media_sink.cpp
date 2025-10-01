@@ -34,6 +34,8 @@ namespace crtc {
 	CRTCMediaSink::CRTCMediaSink()
 		: pc_(new libp2p_peerconnection::p2p_peer_connection())
 {
+
+		pc_->SignalTargetTransferRate.connect(this, &CRTCMediaSink::OnTragetTransferRate);
    /* MediaFormat video_fmt;
     video_fmt.media_type = MainMediaType::kMainTypeVideo;
     video_fmt.sub_fmt.video_fmt.type = SubMediaType::kSubTypeH264;
@@ -306,6 +308,13 @@ void CRTCMediaSink::SendStop() {
         }
 
     }, this);
+}
+
+void CRTCMediaSink::OnTragetTransferRate(libp2p_peerconnection::p2p_peer_connection *, const libice::TargetTransferRate& target)
+{
+
+
+	SignalTargetTransferRate(this, target);
 }
 
 //void CRTCMediaSink::PacketAndSendVideo(std::shared_ptr<MediaFrame> frame) {

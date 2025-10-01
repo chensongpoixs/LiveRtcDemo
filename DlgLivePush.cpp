@@ -45,6 +45,8 @@ DlgLivePush::DlgLivePush()
 	, crtc_media_sink_ (new crtc::CRTCMediaSink())
 	, x264_encoder_(new  libmedia_codec::X264Encoder())
 {
+	crtc_media_sink_->SignalTargetTransferRate.connect(this, &DlgLivePush::OnTragetTransferRate);
+	//crtc_media_sink_->get_pc_obj()-
 	x264_encoder_->SetSendFrame(crtc_media_sink_->get_pc_obj());
 
 //	rtc::LogMessage::LogToDebug(rtc::LS_VERBOSE);
@@ -301,6 +303,14 @@ void DlgLivePush::OnBnClickedBtnPush()
 
 
 
+}
+
+void DlgLivePush::OnTragetTransferRate(crtc::CRTCMediaSink *, const libice::TargetTransferRate & target)
+{
+	if (x264_encoder_)
+	{
+		x264_encoder_->SetBitrate(target.target_rate.kbps());
+	}
 }
 
 

@@ -30,13 +30,15 @@
 #include "libcross_platform_collection_render/track_capture/ctrack_capture.h"
 #include "media/crtc_media_sink.h"
 #include "libmedia_codec/x264_encoder.h"
-
+#include "rtc_base/third_party/sigslot/sigslot.h"
+#include "libp2p_peerconnection/cp2p_peerconnection.h"
+#include "media/crtc_media_sink.h"
 
 #define WM_MY_PUSH_MESSAGE (WM_USER + 101)
 
 // DlgVideo ¶Ô»°¿ò
 class CLiveWin32Dlg;
-class DlgLivePush : public CDialog//, public RTMPHosterEvent
+class DlgLivePush : public CDialog, public sigslot::has_slots<>//, public RTMPHosterEvent
 {
 	DECLARE_DYNAMIC(DlgLivePush)
 
@@ -88,6 +90,10 @@ public:
 	CString m_strCaptureType;
 	CStatic m_staticCaptrue;
 	afx_msg void OnBnClickedBtnPush();
+public:
+
+
+	void OnTragetTransferRate(crtc::CRTCMediaSink*, const libice::TargetTransferRate& target);
 
 protected:
 	DlgVideo		*m_pDlgVideoMain;
