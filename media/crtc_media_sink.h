@@ -51,8 +51,8 @@ public:
     }*/
 
 
-	libmedia_codec::EncodeImageObser *  get_pc_obj() { return pc_; }
-
+	libmedia_codec::EncodeImageObser *  get_video_obj() { return pc_; }
+	libmedia_codec::EncodeAudioObser * get_audio_obj() { return pc_; }
 
 	void set_http_param(const std::string & action, std::string & url, const std::string & user_name, const std::string & stream_name);
 

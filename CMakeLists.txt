@@ -394,6 +394,25 @@ libcross_platform_collection_render
 		#libx264d.lib
 	#libx264.dll.lib
 	#libx264.lib
+
+	# moudles/audio_device 
+	audio_device_buffer 						
+	audio_device_generic						
+	audio_device_name_source 					
+	windows_core_audio_utility 					
+	audio_device_module_from_input_and_output 	
+	audio_device_impl 			
+	
+
+
+
+	       dmoguids.lib
+          wmcodecdspuuid.lib
+        amstrmid.lib
+         msdmo.lib
+        oleaut32.lib
+		opus
+
 			)
 
 

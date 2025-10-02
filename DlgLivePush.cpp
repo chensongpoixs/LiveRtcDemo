@@ -1,4 +1,4 @@
-/*
+Ôªø/*
 *  Copyright (c) 2025 The CRTC project authors . All Rights Reserved.
 *
 *  Please visit https://chensongpoixs.github.io for detail
@@ -24,9 +24,9 @@
 #include "libcross_platform_collection_render/desktop_capture/desktop_capture.h"
 #include "http/crtc_global.h"
 
-// DlgRtmpPush ∂‘ª∞øÚ
+// DlgRtmpPush ÂØπËØùÊ°Ü
 
-static const char * capture_type = "…„œÒÕ∑";
+static const char * capture_type = "ÊëÑÂÉèÂ§¥";
 
 IMPLEMENT_DYNAMIC(DlgLivePush, CDialog)
 
@@ -35,7 +35,7 @@ DlgLivePush::DlgLivePush()
 	, m_strUrl(("http://127.0.0.1:8087"))
 	, m_strUserName("1234")
 	, m_strStreamName("crtc")
-	, m_strLiveType("RTC")
+	, m_strAudioDeviceType("")
 	, m_strCaptureType(capture_type)
 	//, m_pAVRtmpstreamer(NULL)
 	, m_pDlgVideoMain(NULL)
@@ -44,14 +44,17 @@ DlgLivePush::DlgLivePush()
 	, capture_track_source_(nullptr)
 	, crtc_media_sink_ (new crtc::CRTCMediaSink())
 	, x264_encoder_(new  libmedia_codec::X264Encoder())
+	, audio_capture_(new libcross_platform_collection_render::AudioCapture(video_render_factory_->worker_thread()))
+	, opus_encoder2_(new libmedia_codec::OpusEncoder2())
 {
 	crtc_media_sink_->SignalTargetTransferRate.connect(this, &DlgLivePush::OnTragetTransferRate);
 	//crtc_media_sink_->get_pc_obj()-
-	x264_encoder_->SetSendFrame(crtc_media_sink_->get_pc_obj());
-
+	x264_encoder_->SetSendFrame(crtc_media_sink_->get_video_obj());
+	opus_encoder2_->SetSendFrame(crtc_media_sink_->get_audio_obj());
 //	rtc::LogMessage::LogToDebug(rtc::LS_VERBOSE);
 
 	x264_encoder_->Start();
+//	opus_encoder2_->Start();
 }
 
 DlgLivePush::~DlgLivePush()
@@ -87,6 +90,7 @@ DlgLivePush::~DlgLivePush()
 
 void DlgLivePush::DoDataExchange(CDataExchange* pDX)
 {
+
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT_URL, m_editUrl);
 	DDX_Control(pDX, IDC_BTN_PUSH, m_btnRtmp);
@@ -101,39 +105,66 @@ void DlgLivePush::DoDataExchange(CDataExchange* pDX)
 
 	CComboBox* pComboBox = (CComboBox*)GetDlgItem(IDC_COMBO1);
 	CComboBox* pComboBox2 = (CComboBox*)GetDlgItem(IDC_COMBO2);
-	//œÚ¡–±Ì÷–ÃÌº”º∏∏ˆœÓ
+	//ÂêëÂàóË°®‰∏≠Ê∑ªÂä†Âá†‰∏™È°π
 	int nIndex = 0;
 	//pComboBox->AddString(_T("RTC"));
 	//pComboBox->AddString(_T("RTMP"));
 	//pComboBox->AddString(_T("RTSP"));
 	 
-	nIndex = pComboBox->InsertString(0, _T("RTC"));
+	/*nIndex = pComboBox->InsertString(0, _T("RTC"));
  
 	nIndex = pComboBox->InsertString(1, _T("RTMP"));
  
-	nIndex = pComboBox->InsertString(  2, _T("RTSP"));
+	nIndex = pComboBox->InsertString(  2, _T("RTSP"));*/
  
-	nIndex = pComboBox2->InsertString(0, _T("◊¿√Ê"));
+	nIndex = pComboBox2->InsertString(0, _T("Ê°åÈù¢"));
 
-	nIndex = pComboBox2->InsertString(1, _T("…„œÒÕ∑"));
+	nIndex = pComboBox2->InsertString(1, _T("ÊëÑÂÉèÂ§¥"));
 
 	//nIndex = pComboBox->InsertString(2, _T("RTSP"));
-	// ºŸ…Ëƒ˙œÎ…æ≥˝À˜“˝Œ™ 0 µƒœÓ£®º¥µ⁄“ª∏ˆœÓ£©
+	// ÂÅáËÆæÊÇ®ÊÉ≥Âà†Èô§Á¥¢Âºï‰∏∫ 0 ÁöÑÈ°πÔºàÂç≥Á¨¨‰∏Ä‰∏™È°πÔºâ
 //	pComboBox->DeleteString(0);
 
-	// …æ≥˝œÓ∫Û£¨∫Û–¯œÓµƒÀ˜“˝Ω´∏ƒ±‰°£¿˝»Á£¨»Áπ˚ƒ˙…æ≥˝‘≠¿¥À˜“˝Œ™ 1 µƒœÓ£¨–Ë“™…æ≥˝œ÷‘⁄À˜“˝Œ™0µƒœÓ°£
+	// Âà†Èô§È°πÂêéÔºåÂêéÁª≠È°πÁöÑÁ¥¢ÂºïÂ∞ÜÊîπÂèò„ÄÇ‰æãÂ¶ÇÔºåÂ¶ÇÊûúÊÇ®Âà†Èô§ÂéüÊù•Á¥¢Âºï‰∏∫ 1 ÁöÑÈ°πÔºåÈúÄË¶ÅÂà†Èô§Áé∞Âú®Á¥¢Âºï‰∏∫0ÁöÑÈ°π„ÄÇ
 //	pComboBox->DeleteString(0);
 
-//	pComboBox->AddString(_T("—°œÓ 1"));
-	//pComboBox->AddString(_T("—°œÓ 2"));
-	//pComboBox->AddString(_T("—°œÓ 3"));
+//	pComboBox->AddString(_T("ÈÄâÈ°π 1"));
+	//pComboBox->AddString(_T("ÈÄâÈ°π 2"));
+	//pComboBox->AddString(_T("ÈÄâÈ°π 3"));
 
-	//ResetContent”√”⁄«Âø’◊È∫œøÚ÷–µƒÀ˘”–œÓ
+	//ResetContentÁî®‰∫éÊ∏ÖÁ©∫ÁªÑÂêàÊ°Ü‰∏≠ÁöÑÊâÄÊúâÈ°π
 	//pComboBox->ResetContent();
+
+
+	int32_t audio_device_count = audio_capture_->GetAudioDeviceCount();
 	 
+	WCHAR buffer[128] = {0};
+	auto bytetowchar= [&](const std::string &src) {
+		if (MultiByteToWideChar(CP_UTF8, 0, src.c_str(), src.size(), buffer,
+			128) == 0) {
+			RTC_LOG(LS_ERROR)
+				<< "MultiByteToWideChar(CP_UTF8) failed with error code "
+				<< GetLastError();
+		}
+	};
+	//std::string audio_
+	//m_strLiveType
+	for (int32_t i = 0; i < audio_device_count; ++i)
+	{
+		std::string audio_name;
+		std::string audio_guild;
+		audio_capture_->GetAudioDeviceInfo(i, audio_name, audio_guild);
+		// Ëøô‰∏™ÂæàÂ•áÊÄ™Âë¢ UTF-8
+		bytetowchar(audio_name);
+		m_strAudioDeviceType = buffer;
+		audio_gurild_.insert(std::make_pair(m_strAudioDeviceType,  audio_guild));
+		pComboBox->InsertString(i, m_strAudioDeviceType);
+		
+	}
+
 	// IDC_COMBO1
 	DDX_Control(pDX, IDC_COMBO1, m_comboxType);
-	DDX_Text(pDX, IDC_COMBO1, m_strLiveType);
+	DDX_Text(pDX, IDC_COMBO1, m_strAudioDeviceType);
 	DDX_Control(pDX, IDC_COMBO2, m_comboxcaptureType);
 	DDX_Text(pDX, IDC_COMBO2, m_strCaptureType);
 	
@@ -156,7 +187,7 @@ ON_CBN_SELCHANGE(IDC_COMBO2, &DlgLivePush::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
-// DlgRtmpPush œ˚œ¢¥¶¿Ì≥Ã–Ú
+// DlgRtmpPush Ê∂àÊÅØÂ§ÑÁêÜÁ®ãÂ∫è
 
 void DlgLivePush::OnOK()
 {
@@ -189,7 +220,7 @@ BOOL DlgLivePush::OnInitDialog()
 		m_pDlgVideoMain->SetWindowPos(NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// “Ï≥£: OCX  Ù–‘“≥”¶∑µªÿ FALSE
+	// ÂºÇÂ∏∏: OCX Â±ûÊÄßÈ°µÂ∫îËøîÂõû FALSE
 }
 
 BOOL DlgLivePush::DestroyWindow()
@@ -244,7 +275,7 @@ LRESULT DlgLivePush::OnMyMessage(WPARAM wParam, LPARAM lParam)
 
 void DlgLivePush::OnBnClickedBtnPush()
 {
-	// TODO:  ‘⁄¥ÀÃÌº”øÿº˛Õ®÷™¥¶¿Ì≥Ã–Ú¥˙¬Î
+	// TODO:  Âú®Ê≠§Ê∑ªÂä†Êéß‰ª∂ÈÄöÁü•Â§ÑÁêÜÁ®ãÂ∫è‰ª£Á†Å
 	//if (m_pAVRtmpstreamer == NULL) {
 	//	m_pAVRtmpstreamer = RTMPHoster::Create(*this);
 	//	m_pAVRtmpstreamer->SetVideoCapturer(m_pDlgVideoMain->m_hWnd);
@@ -257,7 +288,7 @@ void DlgLivePush::OnBnClickedBtnPush()
 	//			ss[i] = m_strUrl.GetAt(i);
 	//		}
 	//		m_pAVRtmpstreamer->StartRtmpStream(ss);
-	//		m_btnRtmp.SetWindowText(L"Ω· ¯");
+	//		m_btnRtmp.SetWindowText(L"ÁªìÊùü");
 	//	}
 	//}
 	//else 
@@ -291,7 +322,7 @@ void DlgLivePush::OnBnClickedBtnPush()
 
 		crtc_media_sink_->set_http_param("push", std::string(rtc_url), std::string(rtc_username), std::string(rtc_streamname));
 		crtc_media_sink_->Start();
-		m_btnRtmp.SetWindowText("Õ∆¡˜");
+		m_btnRtmp.SetWindowText("Êé®ÊµÅ");
 		//m_pAVRtmpstreamer->SetVideoCapturer(NULL);
 		//m_pAVRtmpstreamer->StopRtmpStream();
 	//	RTMPHoster::Destory(m_pAVRtmpstreamer);
@@ -346,7 +377,7 @@ void DlgLivePush::OnBnClickedAudioVideo()
 			capture_track_source_ = libcross_platform_collection_render::CapturerTrackSource::Create(std::string(curcapture_type) == std::string(capture_type));
 			capture_track_source_->set_catprue_callback(x264_encoder_, video_render_factory_->signaling_thread());
 
-			// –Ë“™–≈¡Ó
+			// ÈúÄË¶Å‰ø°‰ª§
 			rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(video_render_factory_->create_video_render("desktop", capture_track_source_));
 			//rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
 			//	peer_connection_factory_->CreateVideoTrack(kVideoLabel, video_device));
@@ -355,6 +386,16 @@ void DlgLivePush::OnBnClickedAudioVideo()
 			video_renderer_ = (libcross_platform_collection_render::cvideo_renderer::Create(m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), video_track_));
 			capture_track_source_->StartCapture();
 		});
+		char audio_type[128] = { 0 };
+		memset(audio_type, 0, 128);
+		GetDlgItem(IDC_COMBO1)->GetWindowText(m_strAudioDeviceType);
+		int fnlen = m_strAudioDeviceType.GetLength();
+		for (int i = 0; i <= fnlen; i++) {
+			audio_type[i] = m_strAudioDeviceType.GetAt(i);
+		}
+		audio_capture_->SetAudioEncoder(opus_encoder2_);
+		audio_capture_->Start(audio_gurild_[audio_type]);
+		opus_encoder2_->Start();
 	//	m_staticCaptrue.ShowWindow(SW_SHOWNORMAL);
 		//m_pDlgVideoMain->ShowWindow(SW_SHOWNORMAL);
 	}

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 *  Copyright (c) 2025 The CRTC project authors . All Rights Reserved.
 *
 *  Please visit https://chensongpoixs.github.io for detail
@@ -32,21 +32,23 @@
 #include "libmedia_codec/x264_encoder.h"
 #include "rtc_base/third_party/sigslot/sigslot.h"
 #include "libp2p_peerconnection/cp2p_peerconnection.h"
+#include "libcross_platform_collection_render/audio_capture/audio_capture.h"
 #include "media/crtc_media_sink.h"
-
+#include "libmedia_codec/audio_codec/opus_encoder.h"
+#include <map>
 #define WM_MY_PUSH_MESSAGE (WM_USER + 101)
 
-// DlgVideo ¶Ô»°¿ò
+// DlgVideo å¯¹è¯æ¡†
 class CLiveWin32Dlg;
 class DlgLivePush : public CDialog, public sigslot::has_slots<>//, public RTMPHosterEvent
 {
 	DECLARE_DYNAMIC(DlgLivePush)
 
 public:
-	DlgLivePush();   // ±ê×¼¹¹Ôìº¯Êı
+	DlgLivePush();   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~DlgLivePush();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_DIALOG_PUSH };
 
 protected:
@@ -58,7 +60,7 @@ protected:
 	virtual void OnRtmpStreamClosed() {};
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 	virtual void OnOK();
@@ -83,7 +85,7 @@ public:
 	CEdit	m_editStreamName;
 	CString m_strStreamName;
 	CComboBox  m_comboxType;
-	CString m_strLiveType;
+	CString m_strAudioDeviceType;
 
 
 	CComboBox  m_comboxcaptureType;
@@ -114,6 +116,9 @@ private:
 	crtc::CRTCMediaSink *                         crtc_media_sink_;
 
 	 libmedia_codec::X264Encoder *								   x264_encoder_;
+	 libcross_platform_collection_render::AudioCapture* audio_capture_;
+	 libmedia_codec::OpusEncoder2 *                     opus_encoder2_;
+	 std::map<std::string, std::string>           audio_gurild_;
 public:
 	//afx_msg void OnEnChangeStreamName();
 //	afx_msg void OnCbnSelchangeCombo1();
