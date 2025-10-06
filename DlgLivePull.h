@@ -22,6 +22,8 @@
 #include "Resource.h"
 //#include "RtmpGuester.h"
 #include "DlgVideo.h"
+#include "libmedia_transfer_protocol/librtsp/rtsp_session.h"
+
 #define WM_MY_PULL_MESSAGE (WM_USER + 102)
 
 // DlgVideo ¶Ô»°¿ò
@@ -69,7 +71,7 @@ public:
 private:
 	DlgVideo		*m_pDlgVideoMain;
 	//RTMPGuester		*m_pAVRtmplayer;
-	
+	libmedia_transfer_protocol::librtsp::RtspSession    rtsp_session_;
 public:
 	//afx_msg void OnStnClickedStaticUrl();
 };

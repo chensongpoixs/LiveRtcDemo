@@ -32,7 +32,11 @@ IMPLEMENT_DYNAMIC(DlgLivePush, CDialog)
 
 DlgLivePush::DlgLivePush()
 	: CDialog(DlgLivePush::IDD)
+#if 0
 	, m_strUrl(("http://127.0.0.1:8087"))
+#else 
+	, m_strUrl("http://120.48.112.56:8087")
+#endif 
 	, m_strUserName("1234")
 	, m_strStreamName("crtc")
 	, m_strAudioDeviceType("")

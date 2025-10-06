@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "LiveWin32.h"
 #include "LiveWin32Dlg.h"
-
+#include "rtc_base/win32_socket_init.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -48,7 +48,7 @@ CLiveWin32App::CLiveWin32App()
 
 CLiveWin32App theApp;
 
-
+static rtc::WinsockInitializer winsock_init;
 // CLiveWin32App 初始化
 
 BOOL CLiveWin32App::InitInstance()
@@ -72,7 +72,7 @@ BOOL CLiveWin32App::InitInstance()
 
 
 	AfxEnableControlContainer();
-
+	
 	// 创建 shell 管理器，以防对话框包含
 	// 任何 shell 树视图控件或 shell 列表视图控件。
 	CShellManager *pShellManager = new CShellManager;

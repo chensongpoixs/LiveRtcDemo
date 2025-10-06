@@ -19,14 +19,15 @@
 #include "stdafx.h"
 #include "DlgLivePull.h"
 // DlgLivePull 对话框
-
+#include <thread>
 IMPLEMENT_DYNAMIC(DlgLivePull, CDialog)
 
 DlgLivePull::DlgLivePull()
 	: CDialog(DlgLivePull::IDD)
-	, m_strUrl(_T("http://chensong.com:8087"))
+	, m_strUrl(_T("rtsp://admin:Cs@563519@192.168.1.64/streaming/channels/101"))
 	//, m_pAVRtmplayer(NULL)
 	, m_pDlgVideoMain(NULL)
+	, rtsp_session_()
 {
 }
 
@@ -128,6 +129,158 @@ void DlgLivePull::OnLButtonDblClk(UINT nFlags, CPoint point)
 	CDialog::OnLButtonDblClk(nFlags, point);
 }
 
+
+#if 0
+
+#include <winsock2.h>
+//#include <ws2tcp.h>
+#include <stdio.h>
+#pragma comment(lib, "ws2_32.lib")
+
+#define DATA_BUFSIZE 8192
+
+typedef struct _SOCKET_INFORMATION {
+	CHAR Buffer[DATA_BUFSIZE];
+	WSABUF DataBuf;
+	SOCKET Socket;
+	WSAOVERLAPPED Overlapped;
+	DWORD BytesSEND;
+	DWORD BytesRECV;
+} SOCKET_INFORMATION, *LPSOCKET_INFORMATION;
+
+int main____connect() {
+	WSADATA wsaData;
+	SOCKET ConnectSocket = INVALID_SOCKET;
+	WSAEVENT EventArray[1];
+	DWORD EventTotal = 0, Index;
+	LPSOCKET_INFORMATION SocketInfo;
+
+	// 初始化Winsock
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		printf("WSAStartup failed: %d\n", WSAGetLastError());
+		return 1;
+	}
+
+	// 创建事件对象
+	EventArray[0] = WSACreateEvent();
+	if (EventArray[0] == WSA_INVALID_EVENT) {
+		printf("WSACreateEvent failed: %d\n", WSAGetLastError());
+		WSACleanup();
+		return 1;
+	}
+
+	// 创建TCP套接字
+	ConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (ConnectSocket == INVALID_SOCKET) {
+		printf("socket failed: %d\n", WSAGetLastError());
+		WSACloseEvent(EventArray[0]);
+		WSACleanup();
+		return 1;
+	}
+
+	// 设置服务器地址
+	SOCKADDR_IN ServerAddr;
+	ServerAddr.sin_family = AF_INET;
+	ServerAddr.sin_addr.s_addr = inet_addr("192.168.1.64");
+	ServerAddr.sin_port = htons(544);
+
+	// 注册网络事件
+	if (WSAEventSelect(ConnectSocket, EventArray[0], FD_CONNECT | FD_READ | FD_WRITE | FD_CLOSE) == SOCKET_ERROR) {
+		printf("WSAEventSelect failed: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACloseEvent(EventArray[0]);
+		WSACleanup();
+		return 1;
+	}
+
+	// 发起连接
+	if (connect(ConnectSocket, (SOCKADDR*)&ServerAddr, sizeof(ServerAddr)) == SOCKET_ERROR) {
+		if (WSAGetLastError() != WSAEWOULDBLOCK) {
+			printf("connect failed: %d\n", WSAGetLastError());
+			closesocket(ConnectSocket);
+			WSACloseEvent(EventArray[0]);
+			WSACleanup();
+			return 1;
+		}
+	}
+
+	// 分配套接字信息结构
+	SocketInfo = (LPSOCKET_INFORMATION)GlobalAlloc(GPTR, sizeof(SOCKET_INFORMATION));
+	SocketInfo->Socket = ConnectSocket;
+	SocketInfo->BytesSEND = 0;
+	SocketInfo->BytesRECV = 0;
+
+	// 主事件循环
+	while (TRUE) {
+		Index = WSAWaitForMultipleEvents(EventTotal + 1, EventArray, FALSE, WSA_INFINITE, FALSE);
+		if (Index == WSA_WAIT_FAILED) {
+			printf("WSAWaitForMultipleEvents failed: %d\n", WSAGetLastError());
+			break;
+		}
+
+		Index = Index - WSA_WAIT_EVENT_0;
+		WSANETWORKEVENTS NetworkEvents;
+		if (WSAEnumNetworkEvents(ConnectSocket, EventArray[Index], &NetworkEvents) == SOCKET_ERROR) {
+			printf("WSAEnumNetworkEvents failed: %d\n", WSAGetLastError());
+			break;
+		}
+
+		// 处理连接完成事件
+		if (NetworkEvents.lNetworkEvents & FD_CONNECT) {
+			if (NetworkEvents.iErrorCode[FD_CONNECT_BIT] != 0) {
+				printf("FD_CONNECT failed: %d\n", NetworkEvents.iErrorCode[FD_CONNECT_BIT]);
+				break;
+			}
+			printf("Connection established\n");
+			// 发送测试数据
+			const char* sendbuf = "Hello from client";
+			if (send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0) == SOCKET_ERROR) {
+				printf("send failed: %d\n", WSAGetLastError());
+				break;
+			}
+		}
+
+		// 处理可读事件
+		if (NetworkEvents.lNetworkEvents & FD_READ) {
+			if (NetworkEvents.iErrorCode[FD_READ_BIT] != 0) {
+				printf("FD_READ failed: %d\n", NetworkEvents.iErrorCode[FD_READ_BIT]);
+				break;
+			}
+
+			int recvResult = recv(ConnectSocket, SocketInfo->Buffer, DATA_BUFSIZE, 0);
+			if (recvResult > 0) {
+				printf("Received %d bytes: %.*s\n", recvResult, recvResult, SocketInfo->Buffer);
+			}
+			else if (recvResult == 0) {
+				printf("Connection closed\n");
+				break;
+			}
+			else {
+				printf("recv failed: %d\n", WSAGetLastError());
+				break;
+			}
+		}
+
+		// 处理关闭事件
+		if (NetworkEvents.lNetworkEvents & FD_CLOSE) {
+			if (NetworkEvents.iErrorCode[FD_CLOSE_BIT] != 0) {
+				printf("FD_CLOSE failed: %d\n", NetworkEvents.iErrorCode[FD_CLOSE_BIT]);
+			}
+			printf("Server disconnected\n");
+			break;
+		}
+	}
+
+	// 清理资源
+	GlobalFree(SocketInfo);
+	closesocket(ConnectSocket);
+	WSACloseEvent(EventArray[0]);
+	WSACleanup();
+	return 0;
+}
+#endif //
+
+
 void DlgLivePull::OnBnClickedBtnPull()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -144,6 +297,28 @@ void DlgLivePull::OnBnClickedBtnPull()
 	//	m_btnRtmp.SetWindowTextW(L"结束");
 	//}
 	//else 
+#if 1
+		
+		rtsp_session_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
+			char ss[1024];
+			memset(ss, 0, 1024);
+			GetDlgItem(IDC_EDIT_URL)->GetWindowText(m_strUrl);
+			int fnlen = m_strUrl.GetLength();
+			for (int i = 0; i <= fnlen; i++)
+			{
+				ss[i] = m_strUrl.GetAt(i);
+			}
+			rtsp_session_.Play(ss);
+		});
+#else 
+	std::thread([]()
+	{
+
+		main____connect();
+	}).detach();
+#endif ///	
+
+		
 	{
 		m_btnLive.SetWindowText("拉流");
 		//m_pAVRtmplayer->StopRtmpPlay();
