@@ -378,7 +378,7 @@ libcross_platform_collection_render
 		#api
 		wrapping_async_dns_resolver
 		#stats_collector_interface  
-		
+		bitstream_reader
 
 		libice
 		libp2p_peerconnection 
