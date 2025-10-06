@@ -84,42 +84,42 @@ libcross_platform_collection_render
         oleaut32.lib
         strmiids.lib
         user32.lib
-		libwebrtc.lib
-		abseil_dll.lib
-		absl_cordz_functions.lib
-		absl_cordz_handle.lib
-		absl_cordz_info.lib
-		absl_cordz_sample_token.lib
-		absl_flags.lib
-		absl_flags_commandlineflag_internal.lib
-		absl_flags_internal.lib
-		absl_flags_marshalling.lib
-		absl_flags_parse.lib
-		absl_flags_private_handle_accessor.lib
-		absl_flags_program_name.lib
-		absl_flags_reflection.lib
-		absl_flags_usage.lib
-		absl_flags_usage_internal.lib
-		absl_low_level_hash.lib
-		absl_random_internal_distribution_test_util.lib
-		jpeg-static.lib
+		libwebrtc
+		abseil_dll
+		absl_cordz_functions
+		absl_cordz_handle
+		absl_cordz_info
+		absl_cordz_sample_token
+		absl_flags
+		absl_flags_commandlineflag_internal
+		absl_flags_internal
+		absl_flags_marshalling
+		absl_flags_parse
+		absl_flags_private_handle_accessor
+		absl_flags_program_name
+		absl_flags_reflection
+		absl_flags_usage
+		absl_flags_usage_internal
+		absl_low_level_hash
+		absl_random_internal_distribution_test_util
+		jpeg-static
 		
 
 		#curl 
-		jsoncpp_static.lib
-		libcurl.lib
+		jsoncpp_static
+		libcurl
 		# curl 
 		Ws2_32.lib
 		Wldap32.lib
 		# api
 		audio_options_api
 		
-		api.lib
-		peerconnection.lib
+		api
+		peerconnection
 
 		#  moudles /video /desktop_capture
 
-		desktop_capture_generic.lib
+		desktop_capture_generic
 		primitives
 		desktop_capture_differ_sse2
 
@@ -131,24 +131,24 @@ libcross_platform_collection_render
 
 		common_video
 		
-		proxy.lib
-		rtc_pc_base.lib
-		checks.lib
-		rtc_base.lib
-		common_audio.lib
+		proxy
+		rtc_pc_base
+		checks
+		rtc_base
+		common_audio
 		task_queue
 		default_task_queue_factory
-		rtc_base_win.lib
-		rtc_base_win_wgc.lib
-		rtc_base_approved.lib
+		rtc_base_win
+		rtc_base_win_wgc
+		rtc_base_approved
 
-		rtc_media_base.lib
+		rtc_media_base
 
 		# rtc_base/third_party
-		base64.lib
-		sigslot.lib 
+		base64
+		sigslot
 		# rtc_base/system
-		file_wrapper.lib
+		file_wrapper
 		default_task_queue_factory
 
 		rtc_task_queue_win
@@ -185,7 +185,7 @@ libcross_platform_collection_render
 			winmm.lib
 
 
-			libyuv.lib
+			libyuv
 		libcrypto.lib 
 		libssl.lib 
 		#
@@ -387,7 +387,7 @@ libcross_platform_collection_render
 		libsrtp2
 		libmedia_codec
 		#libx264.lib
-		x264.lib
+		x264
 
 		
 		#libx264.lib
