@@ -412,7 +412,15 @@ libcross_platform_collection_render
          msdmo.lib
         oleaut32.lib
 		opus
-
+		#libffmpeg
+		  avcodec.lib
+								avdevice.lib
+								avfilter.lib
+								avformat.lib
+								avutil.lib
+								postproc.lib
+								swresample.lib
+								swscale.lib
 			)
 
 

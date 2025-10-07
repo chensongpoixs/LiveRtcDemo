@@ -27,7 +27,7 @@ DlgLivePull::DlgLivePull()
 	, m_strUrl(_T("rtsp://admin:Cs@563519@192.168.1.64/streaming/channels/101"))
 	//, m_pAVRtmplayer(NULL)
 	, m_pDlgVideoMain(NULL)
-	, rtsp_session_()
+	, rtsp_client_()
 {
 }
 
@@ -299,7 +299,7 @@ void DlgLivePull::OnBnClickedBtnPull()
 	//else 
 #if 1
 		
-		rtsp_session_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
+	rtsp_client_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
 			char ss[1024];
 			memset(ss, 0, 1024);
 			GetDlgItem(IDC_EDIT_URL)->GetWindowText(m_strUrl);
@@ -308,7 +308,11 @@ void DlgLivePull::OnBnClickedBtnPull()
 			{
 				ss[i] = m_strUrl.GetAt(i);
 			}
-			rtsp_session_.Play(ss);
+			CRect rc;
+			m_staticCaptrue.GetWindowRect(rc);
+			video_renderer_ = libcross_platform_collection_render::cvideo_renderer::Create(m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), nullptr);
+			rtsp_client_.RegisterDecodeCompleteCallback(video_renderer_);
+			rtsp_client_.Open(ss);
 		});
 #else 
 	std::thread([]()

@@ -23,6 +23,11 @@
 //#include "RtmpGuester.h"
 #include "DlgVideo.h"
 #include "libmedia_transfer_protocol/librtsp/rtsp_session.h"
+#include "libcross_platform_collection_render/video_render/cvideo_render_factory.h"
+#include "libcross_platform_collection_render/video_render/cvideo_render.h"
+#include "libcross_platform_collection_render/track_capture/ctrack_capture.h"
+#include "libmedia_transfer_protocol/librtsp/rtsp_client.h"
+
 
 #define WM_MY_PULL_MESSAGE (WM_USER + 102)
 
@@ -71,7 +76,8 @@ public:
 private:
 	DlgVideo		*m_pDlgVideoMain;
 	//RTMPGuester		*m_pAVRtmplayer;
-	libmedia_transfer_protocol::librtsp::RtspSession    rtsp_session_;
+	libmedia_transfer_protocol::librtsp::RtspClient    rtsp_client_;
+	libcross_platform_collection_render::cvideo_renderer*         video_renderer_;
 public:
 	//afx_msg void OnStnClickedStaticUrl();
 };
