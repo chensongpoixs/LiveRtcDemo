@@ -26,9 +26,6 @@ MESSAGE(STATUS  "####################################")
 add_definitions(-D_AFXDLL)
 
 include_directories(
-	#${XRTC_DIR}
-	#${XRTC_THIRD_PARTY_DIR}/include
-	#${XRTC_DIR}/../xrtc-third_party/NIM_Duilib_Framework
 	.
 	../
 	../libwebrtc
@@ -39,9 +36,8 @@ include_directories(
 	../libice 
 )
 
-link_directories(
-#	${XRTC_THIRD_PARTY_DIR}/lib
-#	${XRTC_DIR}/../xrtc-third_party/out/Windows/lib
+link_directories( 
+.
 )
 
 
