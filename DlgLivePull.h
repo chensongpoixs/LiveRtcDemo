@@ -27,7 +27,7 @@
 #include "libcross_platform_collection_render/video_render/cvideo_render.h"
 #include "libcross_platform_collection_render/track_capture/ctrack_capture.h"
 #include "libmedia_transfer_protocol/librtsp/rtsp_client.h"
-
+#include "libmedia_transfer_protocol/libgb28181/gb28181_server.h"
 
 #define WM_MY_PULL_MESSAGE (WM_USER + 102)
 
@@ -78,6 +78,11 @@ private:
 	//RTMPGuester		*m_pAVRtmplayer;
 	libmedia_transfer_protocol::librtsp::RtspClient    rtsp_client_;
 	libcross_platform_collection_render::cvideo_renderer*         video_renderer_;
+
+
+	libmedia_transfer_protocol::libgb28181::Gb28181Server    gb28181_server_;
+
+
 public:
 	//afx_msg void OnStnClickedStaticUrl();
 };

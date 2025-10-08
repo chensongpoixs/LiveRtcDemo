@@ -28,6 +28,7 @@ DlgLivePull::DlgLivePull()
 	//, m_pAVRtmplayer(NULL)
 	, m_pDlgVideoMain(NULL)
 	, rtsp_client_()
+	, gb28181_server_()
 {
 }
 
@@ -297,7 +298,9 @@ void DlgLivePull::OnBnClickedBtnPull()
 	//	m_btnRtmp.SetWindowTextW(L"½áÊø");
 	//}
 	//else 
-#if 1
+
+#define GB28181 1
+#if 0
 		
 	rtsp_client_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
 			char ss[1024];
@@ -314,12 +317,24 @@ void DlgLivePull::OnBnClickedBtnPull()
 			rtsp_client_.RegisterDecodeCompleteCallback(video_renderer_);
 			rtsp_client_.Open(ss);
 		});
+ 
 #else 
-	std::thread([]()
-	{
 
-		main____connect();
-	}).detach();
+
+	gb28181_server_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
+		CRect rc;
+		m_staticCaptrue.GetWindowRect(rc);
+		video_renderer_ = libcross_platform_collection_render::cvideo_renderer::Create(m_pDlgVideoMain->m_hWnd, rc.Width(), rc.Height(), nullptr);
+		gb28181_server_.RegisterDecodeCompleteCallback(video_renderer_);
+		gb28181_server_.Startup("192.168.1.2", 10000);
+	});
+
+
+	//std::thread([]()
+	//{
+	//
+	//	main____connect();
+	//}).detach();
 #endif ///	
 
 		
