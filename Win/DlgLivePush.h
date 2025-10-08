@@ -79,11 +79,11 @@ public:
 
 	CString m_strUrl;
 
-	CEdit	m_editUserName;
-	CString m_strUserName;
+	//CEdit	m_editUserName;
+//	CString m_strUserName;
 	
-	CEdit	m_editStreamName;
-	CString m_strStreamName;
+	//CEdit	m_editStreamName;
+	//CString m_strStreamName;
 	CComboBox  m_comboxType;
 	CString m_strAudioDeviceType;
 

@@ -35,10 +35,10 @@ DlgLivePush::DlgLivePush()
 #if 0
 	, m_strUrl(("http://127.0.0.1:8087"))
 #else 
-	, m_strUrl("http://120.48.112.56:8087")
+	, m_strUrl("webrtc://120.48.112.56:8087/crtc/123456")
 #endif 
-	, m_strUserName("1234")
-	, m_strStreamName("crtc")
+//	, m_strUserName("1234")
+	//, m_strStreamName("crtc")
 	, m_strAudioDeviceType("")
 	, m_strCaptureType(capture_type)
 	//, m_pAVRtmpstreamer(NULL)
@@ -100,11 +100,11 @@ void DlgLivePush::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_PUSH, m_btnRtmp);
 	DDX_Text(pDX, IDC_EDIT_URL, m_strUrl);
 
-	DDX_Control(pDX, IDC_RTC_USER, m_editUserName);
-	DDX_Text(pDX, IDC_RTC_USER, m_strUserName);
+	//DDX_Control(pDX, IDC_RTC_USER, m_editUserName);
+	//DDX_Text(pDX, IDC_RTC_USER, m_strUserName);
 
-	DDX_Control(pDX, IDC_RTC_STREAM_NAME, m_editStreamName);
-	DDX_Text(pDX, IDC_RTC_STREAM_NAME, m_strStreamName);
+	//DDX_Control(pDX, IDC_RTC_STREAM_NAME, m_editStreamName);
+	//DDX_Text(pDX, IDC_RTC_STREAM_NAME, m_strStreamName);
 	DDX_Control(pDX, IDC_STATIC_CAPTRUE, m_staticCaptrue);
 
 	CComboBox* pComboBox = (CComboBox*)GetDlgItem(IDC_COMBO1);
@@ -308,7 +308,7 @@ void DlgLivePush::OnBnClickedBtnPush()
 			rtc_url[i] = m_strUrl.GetAt(i);
 		}
 
-		char rtc_username[128] = { 0 };
+		/*char rtc_username[128] = { 0 };
 		memset(rtc_username, 0, 128);
 		GetDlgItem(IDC_RTC_USER)->GetWindowText(m_strUserName);
 		 fnlen = m_strUserName.GetLength();
@@ -322,9 +322,22 @@ void DlgLivePush::OnBnClickedBtnPush()
 		 fnlen = m_strStreamName.GetLength();
 		for (int i = 0; i <= fnlen; i++) {
 			rtc_streamname[i] = m_strStreamName.GetAt(i);
+		}*/
+		// webrtc://120.48.112.56:8087/crtc/123456
+		std::vector<std::string>  fileds;
+		rtc::split(rtc_url, '/', &fileds);
+		std::string rtc_username;
+		std::string  rtc_streamname;
+		if (fileds.size() < 4)
+		{
+			RTC_LOG(LS_WARNING) << "url parse failed !!! url : " << rtc_url;
+			return;
 		}
-
-		crtc_media_sink_->set_http_param("push", std::string(rtc_url), std::string(rtc_username), std::string(rtc_streamname));
+		std::string url = "http://";
+		rtc_username = fileds[fileds.size() -1];
+		rtc_streamname = fileds[fileds.size() - 2];
+		url += fileds[fileds.size() - 3];
+		crtc_media_sink_->set_http_param("push", std::string(url), std::string(rtc_username), std::string(rtc_streamname));
 		crtc_media_sink_->Start();
 		m_btnRtmp.SetWindowText("推流");
 		//m_pAVRtmpstreamer->SetVideoCapturer(NULL);

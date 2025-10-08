@@ -299,8 +299,8 @@ void DlgLivePull::OnBnClickedBtnPull()
 	//}
 	//else 
 
-#define GB28181 1
-#if 0
+//#define GB28181 1
+#if 1
 		
 	rtsp_client_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
 			char ss[1024];
