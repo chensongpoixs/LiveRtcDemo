@@ -1,6 +1,6 @@
 ﻿
 
-project(Win32LiveRTCDemo)
+project(Win32LiveRtcDemo)
 cmake_minimum_required(VERSION 2.8)
 MESSAGE(STATUS  "####################################")
 MESSAGE(STATUS  "#############${PROJECT_NAME}###############")
@@ -23,7 +23,14 @@ MESSAGE(STATUS  "####################################")
 #)
 
 
-add_definitions(-D_AFXDLL)
+add_definitions(-D_AFXDLL
+
+
+# curl  libsrtp  opus 
+-DHAVE_CONFIG_H
+
+
+)
 
 include_directories(
 	.

@@ -10,5 +10,5 @@
 
 ## 拉流: RTSP/WebRTC/GB28181
 
-![rtc 拉流](img/rtc_player.png)
+![rtc 拉流](img/gb28181_play.gif)
 
