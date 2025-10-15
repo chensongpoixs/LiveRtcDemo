@@ -72,7 +72,7 @@ DlgLivePush::~DlgLivePush()
 	x264_encoder_->Stop();
 	delete x264_encoder_;
 	x264_encoder_ = nullptr;
-	
+	//rtc::split();
 	if (video_render_factory_)
 	{
 

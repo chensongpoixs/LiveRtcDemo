@@ -18,13 +18,14 @@
 ******************************************************************************/
 #include "stdafx.h"
 #include "DlgLivePull.h"
+#include "libmedia_transfer_protocol/libsip/sip_server.h"
 // DlgLivePull ¶Ô»°¿ò
 #include <thread>
 IMPLEMENT_DYNAMIC(DlgLivePull, CDialog)
 
 DlgLivePull::DlgLivePull()
 	: CDialog(DlgLivePull::IDD)
-	, m_strUrl(_T("rtsp://admin:Cs@563519@192.168.1.64/streaming/channels/101"))
+	, m_strUrl(_T("rtsp://admin:hik@12345@192.168.1.64/streaming/channels/101"))
 	//, m_pAVRtmplayer(NULL)
 	, m_pDlgVideoMain(NULL)
 	, rtsp_client_()
@@ -300,7 +301,10 @@ void DlgLivePull::OnBnClickedBtnPull()
 	//else 
 
 //#define GB28181 1
-#if 1
+
+	//static libmedia_transfer_protocol::libsip::SipServer sip_server_;
+	//sip_server_.Start();
+#if 0
 		
 	rtsp_client_.network_thread()->PostTask(RTC_FROM_HERE, [this]() {
 			char ss[1024];
