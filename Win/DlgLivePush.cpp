@@ -52,9 +52,11 @@ DlgLivePush::DlgLivePush()
 	, opus_encoder2_(new libmedia_codec::OpusEncoder2())
 {
 	crtc_media_sink_->SignalTargetTransferRate.connect(this, &DlgLivePush::OnTragetTransferRate);
-	//crtc_media_sink_->get_pc_obj()-
-	x264_encoder_->SetSendFrame(crtc_media_sink_->get_video_obj());
-	opus_encoder2_->SetSendFrame(crtc_media_sink_->get_audio_obj());
+	 
+	audio_capture_->SignalAudioCaptureFrame.connect(opus_encoder2_, &libmedia_codec::OpusEncoder2::OnNewMediaFrame);
+	opus_encoder2_->SignalAudioEncoderInfoFrame.connect(crtc_media_sink_->GetPeerConnection(), &libp2p_peerconnection::p2p_peer_connection::SendAudioEncode);
+	x264_encoder_->SignalVideoEncodedImage.connect(crtc_media_sink_->GetPeerConnection(), &libp2p_peerconnection::p2p_peer_connection::SendVideoEncode);
+ 
 //	rtc::LogMessage::LogToDebug(rtc::LS_VERBOSE);
 
 	x264_encoder_->Start();
@@ -68,7 +70,12 @@ DlgLivePush::~DlgLivePush()
 		capture_track_source_->Stop();
 		//capture_track_source_ = nullptr;
 	}
-	x264_encoder_->SetSendFrame(nullptr);
+	crtc_media_sink_->SignalTargetTransferRate.disconnect(this );
+
+	audio_capture_->SignalAudioCaptureFrame.disconnect_all( );
+	opus_encoder2_->SignalAudioEncoderInfoFrame.disconnect_all( );
+	x264_encoder_->SignalVideoEncodedImage.disconnect_all(  );
+
 	x264_encoder_->Stop();
 	delete x264_encoder_;
 	x264_encoder_ = nullptr;
@@ -410,7 +417,7 @@ void DlgLivePush::OnBnClickedAudioVideo()
 		for (int i = 0; i <= fnlen; i++) {
 			audio_type[i] = m_strAudioDeviceType.GetAt(i);
 		}
-		audio_capture_->SetAudioEncoder(opus_encoder2_);
+		 
 		audio_capture_->Start(audio_gurild_[audio_type]);
 		opus_encoder2_->Start();
 	//	m_staticCaptrue.ShowWindow(SW_SHOWNORMAL);

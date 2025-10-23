@@ -416,6 +416,7 @@ libcross_platform_collection_render
 								swscale.lib
 								
 			libcommon
+			#video_coding_lib
 			)
 
 
