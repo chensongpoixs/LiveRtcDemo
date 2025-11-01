@@ -77,7 +77,7 @@ libcross_platform_collection_render
         strmiids.lib
         user32.lib
 		 Secur32.lib
-		abseil_dll
+		#abseil_dll
 		absl_cordz_functions
 		absl_cordz_handle
 		absl_cordz_info
@@ -121,7 +121,7 @@ libcross_platform_collection_render
 			winmm.lib
 
 
-			libyuv
+			yuv
 		libcrypto.lib 
 		libssl.lib 
 		#
