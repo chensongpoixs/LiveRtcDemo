@@ -28,12 +28,12 @@
 #include "libcross_platform_collection_render/video_render/cvideo_render_factory.h"
 #include "libcross_platform_collection_render/video_render/cvideo_render.h"
 #include "libcross_platform_collection_render/track_capture/ctrack_capture.h"
-#include "media/crtc_media_sink.h"
+#include "crtc_media_sink.h"
 #include "libmedia_codec/x264_encoder.h"
 #include "rtc_base/third_party/sigslot/sigslot.h"
 #include "libp2p_peerconnection/cp2p_peerconnection.h"
 #include "libcross_platform_collection_render/audio_capture/audio_capture.h"
-#include "media/crtc_media_sink.h"
+ 
 #include "libmedia_codec/audio_codec/opus_encoder.h"
 #include <map>
 #define WM_MY_PUSH_MESSAGE (WM_USER + 101)

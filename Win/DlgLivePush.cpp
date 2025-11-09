@@ -22,8 +22,8 @@
 #include  "libcross_platform_collection_render/desktop_capture/desktop_capture_source.h"
 #include "pc/video_track_source.h"
 #include "libcross_platform_collection_render/desktop_capture/desktop_capture.h"
-#include "http/crtc_global.h"
-
+#include "crtc_global.h"
+#include "crtc_media_sink.h"
 // DlgRtmpPush 对话框
 
 static const char * capture_type = "摄像头";

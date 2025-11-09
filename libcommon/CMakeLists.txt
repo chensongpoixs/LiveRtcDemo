@@ -32,13 +32,17 @@ include_directories(
 
 file(GLOB libcommon_source 
 	 
-	http/*.h
-	http/*.cpp 
-	http/*.cc 
+	#http/*.h
+	#http/*.cpp 
+	#http/*.cc 
+	#
+	#media/*.h
+	#media/*.cpp 
+	#media/*.cc 
 	
-	media/*.h
-	media/*.cpp 
-	media/*.cc 
+		 *.h
+	*.cpp 
+	*.cc 
 ) 
 
 
