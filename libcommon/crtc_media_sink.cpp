@@ -27,6 +27,9 @@
 #include "crtc_global.h"
  
 //#include "modules/rtp_rtcp/rtp_format_h264.h"
+#include "httplib.h"
+#include "json.hpp"
+
 
 namespace crtc {
 
@@ -53,15 +56,60 @@ bool CRTCMediaSink::Start() {
    
  
 
+	libp2p_peerconnection::RTCOfferAnswerOptions  options;
+	std::string offer_sdp =  pc_->create_offer(options, "chensong");
+	CRTCGlobal::Instance()->worker_thread()->PostTask(RTC_FROM_HERE, [=]() {
+		/*
+		
+			action_ = action;
+	url_ = url;
+	user_name_ = user_name;
+	stream_name_ = stream_name;
+		*/
+		std::string rtc_url = "webrtc://" + url_ + "/" + app_ + "/" + stream_name_;
+		nlohmann::json data = {
+   {"type", "offer"},
+   { "sdp", offer_sdp}, 
+   {"streamurl", rtc_url},
+   {"clientid",  stream_name_}
+		};
+
+		httplib::Client cli("http://" + url_);
+
+		auto res = cli.Post("/rtc/push", data.dump(), "application/json");
+		if (res && res->status == 200) {
+			std::cout << "Response: " << res->body << std::endl;
+			RTC_LOG_T_F(LS_INFO) <<  res->body;
+			nlohmann::json response;
+			try
+			{
+				response = nlohmann::json::parse(res->body);
+			}
+			catch (const std::exception&)
+			{
+				RTC_LOG_T_F(LS_INFO) << "request /rtc/push    [msg = "
+					<< res->body <<"] json parse failed !!!";
+				 return;
+			}
+
+			if (pc_)
+			{
+				pc_->set_remote_sdp(response["sdp"]);
+
+
+				 
+			}
+		}
+		else {
+			std::cout << "Error in response" << std::endl;
+		}
+	});
+
     return true;
 }
 
 void CRTCMediaSink::Setup(const std::string& json_config) {
-   /* JsonValue value;
-    value.FromJson(json_config);
-    JsonObject jobj = value.ToObject();
-    JsonObject jxrtc_media_sink = jobj["xrtc_media_sink"].ToObject();
-    url_ = jxrtc_media_sink["url"].ToString();*/
+    
 }
 
 void CRTCMediaSink::Stop() {
@@ -72,11 +120,11 @@ void CRTCMediaSink::Stop() {
  
 
 
-void CRTCMediaSink::set_http_param(const std::string & action, std::string & url, const std::string & user_name, const std::string & stream_name)
+void CRTCMediaSink::set_http_param(const std::string & action, std::string & url, const std::string & app, const std::string & stream_name)
 {
 	action_ = action;
 	url_ = url;
-	user_name_ = user_name;
+	app_ = app;
 	stream_name_ = stream_name;
 }
  

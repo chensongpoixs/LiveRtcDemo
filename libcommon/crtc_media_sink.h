@@ -63,7 +63,7 @@ private:
     std::string protocol_;
     std::string host_;
     std::string action_;
-	std::string user_name_;
+	std::string app_;
 	std::string stream_name_; 
 
 	libp2p_peerconnection::p2p_peer_connection*  pc_;

@@ -35,7 +35,7 @@ DlgLivePush::DlgLivePush()
 #if 0
 	, m_strUrl(("http://127.0.0.1:8087"))
 #else 
-	, m_strUrl("webrtc://120.48.112.56:8087/crtc/123456")
+	, m_strUrl("webrtc://127.0.0.1:8001/live/41010500002000000003")
 #endif 
 //	, m_strUserName("1234")
 	//, m_strStreamName("crtc")
@@ -333,18 +333,18 @@ void DlgLivePush::OnBnClickedBtnPush()
 		// webrtc://120.48.112.56:8087/crtc/123456
 		std::vector<std::string>  fileds;
 		rtc::split(rtc_url, '/', &fileds);
-		std::string rtc_username;
-		std::string  rtc_streamname;
+		std::string rtc_stream_name;
+		std::string  rtc_app;
 		if (fileds.size() < 4)
 		{
 			RTC_LOG(LS_WARNING) << "url parse failed !!! url : " << rtc_url;
 			return;
 		}
-		std::string url = "http://";
-		rtc_username = fileds[fileds.size() -1];
-		rtc_streamname = fileds[fileds.size() - 2];
+		std::string url;// = "http://";
+		rtc_stream_name = fileds[fileds.size() -1];
+		rtc_app = fileds[fileds.size() - 2];
 		url += fileds[fileds.size() - 3];
-		crtc_media_sink_->set_http_param("push", std::string(url), std::string(rtc_username), std::string(rtc_streamname));
+		crtc_media_sink_->set_http_param("push", std::string(url), std::string(rtc_app), std::string(rtc_stream_name));
 		crtc_media_sink_->Start();
 		m_btnRtmp.SetWindowText("推流");
 		//m_pAVRtmpstreamer->SetVideoCapturer(NULL);
